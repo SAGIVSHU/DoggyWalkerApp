@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "814042125012",
+    "project_id": "doggywalkerapp-2a5d0",
+    "storage_bucket": "doggywalkerapp-2a5d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814042125012:android:aea46c2bb0916e9148a141",
+        "android_client_info": {
+          "package_name": "com.example.doggywalkerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfk7lM9DIxuGrp27XXHxvUUjGLsw51rK4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

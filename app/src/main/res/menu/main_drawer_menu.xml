@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_userPage"
+            android:icon="@drawable/baseline_account_box_24"
+            android:title="@string/user"/>
+
+        <item android:id="@+id/nav_tripOrder"
+            android:icon="@drawable/baseline_blind_24"
+            android:title="@string/order_a_trip"/>
+
+        <item android:id="@+id/nav_tripHistory"
+            android:icon="@drawable/baseline_check_24"
+            android:title="@string/trip_history"/>
+
+        <item android:id="@+id/nav_logOut"
+            android:icon="@drawable/baseline_reply_all_24"
+            android:title="@string/log_out"/>
+    </group>
+</menu>
