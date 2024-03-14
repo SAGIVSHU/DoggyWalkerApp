@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
     final Runnable r = new Runnable() {
         public void run() {
-            Intent go = new Intent(LoginActivity.this, UserPage.class);
+            Intent go = new Intent(LoginActivity.this, UserPageActivity.class);
             startActivity(go);
             finish();
 
@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                User user = postSnapshot.getValue(User.class);
+                                UserClass user = postSnapshot.getValue(UserClass.class);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 Gson gson = new Gson();
                                 String json = gson.toJson(user);

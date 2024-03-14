@@ -76,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Uri imageUri;
     private String uid;
     private Button registerBt;
-    private User user;
+    private UserClass user;
     private TextView closeTxt;
     private ImageButton cameraButton, galleryButton;
     private Dialog dialog;
@@ -89,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     final Runnable r = new Runnable() {
         public void run() {
-            Intent go = new Intent(RegisterActivity.this, UserPage.class);
+            Intent go = new Intent(RegisterActivity.this, UserPageActivity.class);
             startActivity(go);
             finish();
 
@@ -248,7 +248,7 @@ public class RegisterActivity extends AppCompatActivity {
                     String finalLocation = locationEt.getText().toString();
                     String email = emailEt.getText().toString();
 
-                    user = new User(email,
+                    user = new UserClass(email,
                             userName,
                             userPassword,
                             phoneNumber,
@@ -464,7 +464,7 @@ public class RegisterActivity extends AppCompatActivity {
                         });
     }
 
-    private void saveUserDB(User user) {
+    private void saveUserDB(UserClass user) {
         userRef = FirebaseDatabase.getInstance().getReference("User");
         userRef.child(user.getUid()).setValue(user);
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);

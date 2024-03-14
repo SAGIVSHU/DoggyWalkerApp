@@ -2,7 +2,7 @@ package com.example.doggywalkerapp;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class UserClass implements Serializable {
     private String userName;
     private String email;
     private String password;
@@ -13,10 +13,10 @@ public class User implements Serializable {
 
     private String extension;
 
-    public User() {
+    public UserClass() {
     }
 
-    public User(String email, String userName, String password, String phoneNumber, String dogRace, String location, String uid, String extension) {
+    public UserClass(String email, String userName, String password, String phoneNumber, String dogRace, String location, String uid, String extension) {
         this.email = email;
         this.userName = userName;
         this.password = password;

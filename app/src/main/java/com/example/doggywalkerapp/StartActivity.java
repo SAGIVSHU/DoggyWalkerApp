@@ -14,14 +14,14 @@ public class StartActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
-    private User getCurrentUser() {
+    private UserClass getCurrentUser() {
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("User", "");
         if (json.equals("")) {
             return null;
         }
-        User user = gson.fromJson(json, User.class);
+        UserClass user = gson.fromJson(json, UserClass.class);
         return user;
 
     }
@@ -31,7 +31,7 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        User currentUser = getCurrentUser();
+        UserClass currentUser = getCurrentUser();
 
         final VideoView videoView = (VideoView) findViewById(R.id.video);
         videoView.setVideoPath("android.resource://" + getPackageName() + "/" + R.raw.startanimation);
@@ -52,7 +52,7 @@ public class StartActivity extends AppCompatActivity {
                     go = new Intent(StartActivity.this, WelcomeActivity.class);
 
                 } else {
-                    go = new Intent(StartActivity.this, UserPage.class);
+                    go = new Intent(StartActivity.this, UserPageActivity.class);
                 }
                 startActivity(go);
                 finish();

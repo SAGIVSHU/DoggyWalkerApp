@@ -19,13 +19,19 @@
         android:theme="@style/Theme.DoggyWalkerApp"
         tools:targetApi="31">
         <activity
+            android:name=".TripHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrderTripActivity"
+            android:exported="false" />
+        <activity
             android:name=".DrawerBaseActivity"
             android:exported="false" />
         <activity
             android:name=".WelcomeActivity"
             android:exported="false" />
         <activity
-            android:name=".UserPage"
+            android:name=".UserPageActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"

@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.doggywalkerapp.databinding.ActivityUserPageBinding;
@@ -20,17 +19,17 @@ import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
 
-public class UserPage extends DrawerBaseActivity {
+public class UserPageActivity extends DrawerBaseActivity {
 
     ActivityUserPageBinding activityUserPageBinding;
     private StorageReference storageReference;
     private SharedPreferences sharedPreferences;
 
-    private User getCurrentUser() {
+    private UserClass getCurrentUser() {
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("User", "");
-        User user = gson.fromJson(json, User.class);
+        UserClass user = gson.fromJson(json, UserClass.class);
         return user;
 
     }
@@ -44,14 +43,14 @@ public class UserPage extends DrawerBaseActivity {
         allocateActivityTitle("User Page");
 
 
-        User currentUser = getCurrentUser();
+        UserClass currentUser = getCurrentUser();
         String extension = currentUser.getExtension();
         Log.d("eserUSer", currentUser.toString());
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                UserPage.this.finish();
+                UserPageActivity.this.finish();
                 System.exit(0);
             }
         });
@@ -64,7 +63,7 @@ public class UserPage extends DrawerBaseActivity {
         imegRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Glide.with(UserPage.this)
+                Glide.with(UserPageActivity.this)
                         .load(uri)
                         .error(R.drawable.loading_image)
                         .into(userImg);
