@@ -6,17 +6,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background"
+    android:background="@drawable/main_background"
     android:layoutDirection="ltr"
     android:padding="16dp"
-    tools:context=".LoginActivity">
+    tools:context=".RegisterActivity">
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/styleUserIcon"
         android:layout_width="155dp"
-        android:layout_centerHorizontal="true"
         android:layout_height="155dp"
+        android:layout_centerHorizontal="true"
         app:cardCornerRadius="100dp">
 
         <ImageView
@@ -28,7 +28,6 @@
             android:src="@drawable/img"
             app:shapeAppearanceOverlay="@style/circular" />
     </androidx.cardview.widget.CardView>
-
 
 
     <TextView

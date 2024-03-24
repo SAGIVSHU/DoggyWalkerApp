@@ -66,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private StorageTask uploadStorageTask;
     private ActivityResultLauncher<String> getContent;
-    ActivityResultLauncher<Intent> startCamera;
+    private ActivityResultLauncher<Intent> startCamera;
     private final static String TAG = "MAIN";
 
     private final static int MY_CAMERA_PERMISSION_CODE = 100;
@@ -234,7 +234,7 @@ public class RegisterActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             public void onClick(View v) {
                 final boolean passFlag = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$").matcher(passEt.getText()).matches();
-                final boolean emailFlag = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(emailEt.getText()).matches();
+                final boolean emailFlag = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(emailEt.getText()).matches() ;
                 final boolean phoneFlag = Pattern.compile("^05\\d{8}$").matcher(phoneEt.getText()).matches();
                 final boolean userFlag = Pattern.compile("^[a-zA-Z]{3,8}$").matcher(userEt.getText()).matches();
 
@@ -254,7 +254,6 @@ public class RegisterActivity extends AppCompatActivity {
                             phoneNumber,
                             race,
                             finalLocation,
-                            "uid",
                             "");
 
                     regUser();
@@ -375,13 +374,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-
     private void uploadFile(String uidForUpload) {
+
         if (imageUri != null) {
             imageUri = reduceImageSize(RegisterActivity.this, imageUri);
-            StorageReference fileReference = storageReference.child(uidForUpload + "." + getFileExtension(imageUri));
-            Log.d("uidSagivGugu56: ", uidForUpload + "." + getFileExtension(imageUri));
-            user.setExtension(getFileExtension(imageUri));
+            StorageReference fileReference = storageReference.child(uidForUpload);
+            Log.d("uidSagivGugu56: ", uidForUpload);
             uploadStorageTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -465,7 +463,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void saveUserDB(UserClass user) {
-        userRef = FirebaseDatabase.getInstance().getReference("User");
+        userRef = FirebaseDatabase.getInstance().getReference("Users");
         userRef.child(user.getUid()).setValue(user);
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

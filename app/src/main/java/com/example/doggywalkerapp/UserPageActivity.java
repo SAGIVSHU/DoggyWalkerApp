@@ -44,7 +44,6 @@ public class UserPageActivity extends DrawerBaseActivity {
 
 
         UserClass currentUser = getCurrentUser();
-        String extension = currentUser.getExtension();
         Log.d("eserUSer", currentUser.toString());
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -59,7 +58,7 @@ public class UserPageActivity extends DrawerBaseActivity {
         userImg.setImageResource(R.drawable.loading_image);
 
         storageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference imegRef = storageReference.child("Uploads/" + currentUser.getUid() + "." + extension);
+        StorageReference imegRef = storageReference.child("Uploads/" + currentUser.getUid());
         imegRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

@@ -11,12 +11,11 @@ public class UserClass implements Serializable {
     private String location;
     private String uid;
 
-    private String extension;
 
     public UserClass() {
     }
 
-    public UserClass(String email, String userName, String password, String phoneNumber, String dogRace, String location, String uid, String extension) {
+    public UserClass(String email, String userName, String password, String phoneNumber, String dogRace, String location, String uid) {
         this.email = email;
         this.userName = userName;
         this.password = password;
@@ -24,16 +23,8 @@ public class UserClass implements Serializable {
         this.dogRace = dogRace;
         this.location = location;
         this.uid = uid;
-        this.extension = extension;
     }
 
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
-    }
 
     public String getEmail() {
         return email;
@@ -93,7 +84,7 @@ public class UserClass implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserClass{" +
                 "userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
@@ -101,7 +92,6 @@ public class UserClass implements Serializable {
                 ", dogRace='" + dogRace + '\'' +
                 ", location='" + location + '\'' +
                 ", uid='" + uid + '\'' +
-                ", extension='" + extension + '\'' +
                 '}';
     }
 }

@@ -87,49 +87,56 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void LoginUser(String email, String password) {
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    progressDialog.setMessage("Logging in...");
-                    progressDialog.show();
-                    Log.d("LoginActivity1", "Successful login");
-                    loginBt.setEnabled(false);
-                    Log.d("LoginActivity2", "Button disabled");
-                    Log.d("signInWithEmailAndPassword:", "success");
-                    showToast("Logged In!");
-                    sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
-                    String json = sharedPreferences.getString("User", "");
-                    userRef = FirebaseDatabase.getInstance().getReference("User");
-                    userRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                UserClass user = postSnapshot.getValue(UserClass.class);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                Gson gson = new Gson();
-                                String json = gson.toJson(user);
-                                editor.putString("User", json);
-                                editor.apply();
-                                final Handler handler = new Handler();
-                                handler.postDelayed(r, 500);
+        if (email.equals("admin@admin.com")  && password.equals("Admin1234") ) {
+            showToast("Admin is here!!!!!!!");
+            startActivity(new Intent(this,AdminActivity.class));
+            finish();
+        }
+        else {
+            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        progressDialog.setMessage("Logging in...");
+                        progressDialog.show();
+                        Log.d("LoginActivity1", "Successful login");
+                        loginBt.setEnabled(false);
+                        Log.d("LoginActivity2", "Button disabled");
+                        Log.d("signInWithEmailAndPassword:", "success");
+                        showToast("Logged In!");
+                        sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
+                        String json = sharedPreferences.getString("User", "");
+                        userRef = FirebaseDatabase.getInstance().getReference("Users");
+                        userRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                    UserClass user = postSnapshot.getValue(UserClass.class);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(user);
+                                    editor.putString("User", json);
+                                    editor.apply();
+                                    final Handler handler = new Handler();
+                                    handler.postDelayed(r, 500);
 
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Log.w("loadPost:onCancelled", error.toException());
-                        }
-                    });
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.w("loadPost:onCancelled", error.toException());
+                            }
+                        });
 
-                } else {
-                    progressDialog.dismiss();
-                    Log.d("signInWithEmailAndPassword:", "failed");
-                    showToast("Incorrect login");
+                    } else {
+                        progressDialog.dismiss();
+                        Log.d("signInWithEmailAndPassword:", "failed");
+                        showToast("Incorrect login");
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
 

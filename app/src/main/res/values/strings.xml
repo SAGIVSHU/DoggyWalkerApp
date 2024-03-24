@@ -21,6 +21,12 @@
     <string name="getrexy_app">GetRexy APP</string>
     <string name="menu_drawer_open">Drawer Open</string>
     <string name="menu_drawer_close">Drawer Close</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="rating">Rating</string>
+    <string name="number_of_trips">Number Of Trips</string>
+    <string name="publish">publish</string>
+    <string name="years_of_experience">Years of experience</string>
 
 
 </resources>

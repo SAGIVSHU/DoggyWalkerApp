@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    tools:context=".AdminActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layoutDirection="ltr"
+        android:padding="16dp">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="600dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/styleUserIcon"
+                    android:layout_width="155dp"
+                    android:layout_height="155dp"
+                    app:cardCornerRadius="100dp">
+
+                    <ImageView
+                        android:id="@+id/walkerIcon"
+                        android:layout_width="155dp"
+                        android:layout_height="155dp"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img"
+                        app:shapeAppearanceOverlay="@style/circular" />
+                </androidx.cardview.widget.CardView>
+
+                <EditText
+                    android:id="@+id/walkerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rounded_corner"
+                    android:hint="@string/name"
+                    android:inputType="textEmailAddress"
+                    android:padding="18dp"
+                    android:textColorHint="@color/white"
+                    android:textSize="20sp"
+                    tools:ignore="TextFields" />
+
+                <EditText
+                    android:id="@+id/walkerPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rounded_corner"
+                    android:hint="@string/phone_number"
+                    android:inputType="number"
+                    android:padding="18dp"
+                    android:textColorHint="@color/white"
+                    android:textSize="20sp"
+                    tools:ignore="TextFields" />
+
+                <EditText
+                    android:id="@+id/walkerYearsOfExperience"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rounded_corner"
+                    android:hint="@string/years_of_experience"
+                    android:inputType="text|textCapSentences"
+                    android:padding="18dp"
+                    android:textColorHint="@color/white"
+                    android:textSize="20sp" />
+
+
+                <EditText
+                    android:id="@+id/rating"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rounded_corner"
+                    android:hint="@string/rating"
+                    android:inputType="number"
+                    android:padding="18dp"
+                    android:textColorHint="@color/white"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/wlakerLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rounded_corner"
+                    android:hint="@string/location"
+                    android:inputType="text"
+                    android:padding="18dp"
+                    android:textColorHint="@color/white"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/numberOfTris"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rounded_corner"
+                    android:hint="@string/number_of_trips"
+                    android:inputType="number"
+                    android:padding="18dp"
+                    android:textColorHint="@color/white"
+                    android:textSize="20sp" />
+
+
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:layout_below="@id/scrollView"
+            android:id="@+id/publish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/white"
+            android:padding="18dp"
+            android:text="@string/publish"
+            android:textColor="@color/blue"
+            android:textSize="20sp" />
+
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
