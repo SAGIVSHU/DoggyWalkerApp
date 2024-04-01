@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -74,7 +72,6 @@ public class RegisterActivity extends AppCompatActivity {
             android.Manifest.permission.CAMERA
     };
     private Uri imageUri;
-    private String uid;
     private Button registerBt;
     private UserClass user;
     private TextView closeTxt;
@@ -87,14 +84,6 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseAuth.signOut();
     }
 
-    final Runnable r = new Runnable() {
-        public void run() {
-            Intent go = new Intent(RegisterActivity.this, UserPageActivity.class);
-            startActivity(go);
-            finish();
-
-        }
-    };
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -163,6 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         //Upload Image with dialog
+        //set dialog
         dialog = new Dialog(RegisterActivity.this);
         dialog.setContentView(R.layout.custom_dialog);
         Objects.requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -234,7 +224,7 @@ public class RegisterActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             public void onClick(View v) {
                 final boolean passFlag = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$").matcher(passEt.getText()).matches();
-                final boolean emailFlag = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(emailEt.getText()).matches() ;
+                final boolean emailFlag = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(emailEt.getText()).matches();
                 final boolean phoneFlag = Pattern.compile("^05\\d{8}$").matcher(phoneEt.getText()).matches();
                 final boolean userFlag = Pattern.compile("^[a-zA-Z]{3,8}$").matcher(userEt.getText()).matches();
 
@@ -374,6 +364,15 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    final Runnable r = new Runnable() {
+        public void run() {
+            Intent go = new Intent(RegisterActivity.this, UserPageActivity.class);
+            startActivity(go);
+            finish();
+
+        }
+    };
+
     private void uploadFile(String uidForUpload) {
 
         if (imageUri != null) {
@@ -395,11 +394,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private String getFileExtension(Uri imageUri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));
-    }
 
     @Override
     protected void onResume() {

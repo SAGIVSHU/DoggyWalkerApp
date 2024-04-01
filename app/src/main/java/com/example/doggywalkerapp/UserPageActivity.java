@@ -58,8 +58,8 @@ public class UserPageActivity extends DrawerBaseActivity {
         userImg.setImageResource(R.drawable.loading_image);
 
         storageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference imegRef = storageReference.child("Uploads/" + currentUser.getUid());
-        imegRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        StorageReference imageRef = storageReference.child("Uploads/" + currentUser.getUid());
+        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Glide.with(UserPageActivity.this)
@@ -71,7 +71,6 @@ public class UserPageActivity extends DrawerBaseActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("erhhjhjror2", e.toString());
                 userImg.setImageResource(R.drawable.empty_profile);
 
             }
