@@ -17,7 +17,7 @@
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="600dp">
+            android:layout_height="580dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,17 +67,7 @@
                     android:textSize="20sp"
                     tools:ignore="TextFields" />
 
-                <EditText
-                    android:id="@+id/walkerYearsOfExperience"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rounded_corner"
-                    android:hint="@string/years_of_experience"
-                    android:inputType="text|textCapSentences"
-                    android:padding="18dp"
-                    android:textColorHint="@color/white"
-                    android:textSize="20sp" />
+
 
 
                 <EditText
@@ -119,9 +109,12 @@
 
             </LinearLayout>
         </ScrollView>
-
-        <Button
+        <LinearLayout
             android:layout_below="@id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <Button
             android:id="@+id/publish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,6 +124,19 @@
             android:text="@string/publish"
             android:textColor="@color/blue"
             android:textSize="20sp" />
+
+            <Button
+                android:layout_below="@id/scrollView"
+                android:id="@+id/backBt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/white"
+                android:padding="18dp"
+                android:text="@string/back"
+                android:textColor="@color/blue"
+                android:textSize="20sp" />
+        </LinearLayout>
 
 
     </RelativeLayout>

@@ -4,99 +4,82 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class DogWalkerClass implements Serializable {
-    private String Name;
-    private String phoneNumber;
-    private String yearsOfExperience;
-    private String rating;
-    private String location;
+    private String dogWalkerName;
+    private String dogWalkerPhoneNumber;
+    private String DogWalkerRating;
+    private String DogWalkerLocation;
     private String walkerId;
-    private String sumOfTrips;
+    private String WalkerSumOfTrips;
 
-    public DogWalkerClass(String name, String phoneNumber, String yearsOfExperience, String rating, String location, String walkerId, String sumOfTrips) {
-        Name = name;
-        this.phoneNumber = phoneNumber;
-        this.yearsOfExperience = yearsOfExperience;
-        this.rating = rating;
-        this.location = location;
+    public DogWalkerClass(String dogWalkerName, String dogWalkerPhoneNumber, String dogWalkerRating, String dogWalkerLocation, String walkerId, String walkerSumOfTrips) {
+        this.dogWalkerName = dogWalkerName;
+        this.dogWalkerPhoneNumber = dogWalkerPhoneNumber;
+        this.DogWalkerRating = dogWalkerRating;
+        this.DogWalkerLocation = dogWalkerLocation;
         this.walkerId = walkerId;
-        this.sumOfTrips = sumOfTrips;
+        this.WalkerSumOfTrips = walkerSumOfTrips;
     }
-
-
-
-
 
     public DogWalkerClass() {
     }
 
-    public String getName() {
-        return Name;
+    public String getDogWalkerName() {
+        return dogWalkerName;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setDogWalkerName(String dogWalkerName) {
+        this.dogWalkerName = dogWalkerName;
     }
 
-    public String getYearsOfExperience() {
-        return yearsOfExperience;
+    public String getDogWalkerPhoneNumber() {
+        return dogWalkerPhoneNumber;
     }
 
-    public String getRating() {
-        return rating;
+    public void setDogWalkerPhoneNumber(String dogWalkerPhoneNumber) {
+        this.dogWalkerPhoneNumber = dogWalkerPhoneNumber;
     }
 
-    public String getLocation() {
-        return location;
+    public String getDogWalkerRating() {
+        return DogWalkerRating;
+    }
+
+    public void setDogWalkerRating(String dogWalkerRating) {
+        DogWalkerRating = dogWalkerRating;
+    }
+
+    public String getDogWalkerLocation() {
+        return DogWalkerLocation;
+    }
+
+    public void setDogWalkerLocation(String dogWalkerLocation) {
+        DogWalkerLocation = dogWalkerLocation;
     }
 
     public String getWalkerId() {
         return walkerId;
     }
 
-
-    public String getSumOfTrips() {
-        return sumOfTrips;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setYearsOfExperience(String yearsOfExperience) {
-        this.yearsOfExperience = yearsOfExperience;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public void setWalkerId(String walkerId) {
         this.walkerId = walkerId;
     }
 
+    public String getWalkerSumOfTrips() {
+        return WalkerSumOfTrips;
+    }
 
-    public void setSumOfTrips(String sumOfTrips) {
-        this.sumOfTrips = sumOfTrips;
+    public void setWalkerSumOfTrips(String walkerSumOfTrips) {
+        WalkerSumOfTrips = walkerSumOfTrips;
     }
 
     @Override
     public String toString() {
         return "DogWalkerClass{" +
-                "Name='" + Name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", yearsOfExperience='" + yearsOfExperience + '\'' +
-                ", rating='" + rating + '\'' +
-                ", location='" + location + '\'' +
+                "dogWalkerName='" + dogWalkerName + '\'' +
+                ", dogWalkerPhoneNumber='" + dogWalkerPhoneNumber + '\'' +
+                ", DogWalkerRating='" + DogWalkerRating + '\'' +
+                ", DogWalkerLocation='" + DogWalkerLocation + '\'' +
                 ", walkerId='" + walkerId + '\'' +
-                ", sumOfTrips='" + sumOfTrips + '\'' +
+                ", WalkerSumOfTrips='" + WalkerSumOfTrips + '\'' +
                 '}';
     }
 }

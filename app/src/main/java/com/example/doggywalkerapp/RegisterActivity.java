@@ -154,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
         //Upload Image with dialog
         //set dialog
         dialog = new Dialog(RegisterActivity.this);
-        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setContentView(R.layout.custom_gallery_dialog);
         Objects.requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.setCancelable(false);
 

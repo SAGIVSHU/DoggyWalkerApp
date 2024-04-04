@@ -36,6 +36,7 @@
     <string name="phone_number2">Phone: </string>
     <string name="location2">Location:</string>
     <string name="rating2">Rating:</string>
+    <string name="back">Back</string>
 
 
 </resources>

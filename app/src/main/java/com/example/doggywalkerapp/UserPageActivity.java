@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 
 public class UserPageActivity extends DrawerBaseActivity {
 
-    ActivityUserPageBinding activityUserPageBinding;
+    private ActivityUserPageBinding activityUserPageBinding;
     private StorageReference storageReference;
     private SharedPreferences sharedPreferences;
 
@@ -36,7 +36,7 @@ public class UserPageActivity extends DrawerBaseActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityUserPageBinding = ActivityUserPageBinding.inflate(getLayoutInflater());
         setContentView(activityUserPageBinding.getRoot());

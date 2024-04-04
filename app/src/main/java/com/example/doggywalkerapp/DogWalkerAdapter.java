@@ -40,10 +40,10 @@ public class DogWalkerAdapter extends RecyclerView.Adapter<DogWalkerAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DogWalkerClass dogWalker = list.get(position);
-        holder.name.setText(dogWalker.getName());
-        holder.phoneNumber.setText(dogWalker.getPhoneNumber());
-        holder.location.setText(dogWalker.getLocation());
-        holder.rating.setText(dogWalker.getRating());
+        holder.name.setText(dogWalker.getDogWalkerName());
+        holder.phoneNumber.setText(dogWalker.getDogWalkerPhoneNumber());
+        holder.location.setText(dogWalker.getDogWalkerLocation());
+        holder.rating.setText(dogWalker.getDogWalkerRating());
 
 
         //set image of the dog walker

@@ -87,23 +87,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void LoginUser(String email, String password) {
-        if (email.equals("admin@admin.com")  && password.equals("Admin1234") ) {
-            showToast("Admin is here!!!!!!!");
-            startActivity(new Intent(this,AdminActivity.class));
-            finish();
-        }
-        else {
-            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        progressDialog.setMessage("Logging in...");
-                        progressDialog.show();
-                        Log.d("LoginActivity1", "Successful login");
-                        loginBt.setEnabled(false);
-                        Log.d("LoginActivity2", "Button disabled");
-                        Log.d("signInWithEmailAndPassword:", "success");
-                        showToast("Logged In!");
+
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+
+                    progressDialog.setMessage("Logging in...");
+                    progressDialog.show();
+                    Log.d("LoginActivity1", "Successful login");
+                    loginBt.setEnabled(false);
+                    Log.d("LoginActivity2", "Button disabled");
+                    Log.d("signInWithEmailAndPassword:", "success");
+                    showToast("Logged In!");
+
+                    if (email.equals("admin@admin.com")) {
+                        showToast("Admin is here!!!!!!!");
+                        startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                        finish();
+                    } else {
                         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
                         String json = sharedPreferences.getString("User", "");
                         userRef = FirebaseDatabase.getInstance().getReference("Users");
@@ -128,15 +130,15 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.w("loadPost:onCancelled", error.toException());
                             }
                         });
-
-                    } else {
-                        progressDialog.dismiss();
-                        Log.d("signInWithEmailAndPassword:", "failed");
-                        showToast("Incorrect login");
                     }
+
+                } else {
+                    progressDialog.dismiss();
+                    Log.d("signInWithEmailAndPassword:", "failed");
+                    showToast("Incorrect login");
                 }
-            });
-        }
+            }
+        });
     }
 
 

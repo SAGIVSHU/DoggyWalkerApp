@@ -4,6 +4,7 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -49,7 +50,7 @@ public class AdminActivity extends AppCompatActivity {
     private Uri imageUri;
     private DogWalkerClass dogWalker;
     private DatabaseReference dbRef;
-    private String name, phoneNumber, location, numberOfTrips, yearsOfExperience, rating;
+    private String name, phoneNumber, location, numberOfTrips, rating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class AdminActivity extends AppCompatActivity {
 
         final Button publish = (Button) findViewById(R.id.publish);
         final ImageView uploadImage = (ImageView) findViewById(R.id.walkerIcon);
+        final Button back = findViewById(R.id.backBt);
 
         storageReference = FirebaseStorage.getInstance().getReference("Uploads");
         imageUri = null;
@@ -88,11 +90,10 @@ public class AdminActivity extends AppCompatActivity {
             public void onClick(View v) {
                 name = ((EditText) findViewById(R.id.walkerName)).getText().toString();
                 phoneNumber = ((EditText) findViewById(R.id.walkerPhoneNumber)).getText().toString();
-                yearsOfExperience = ((EditText) findViewById(R.id.walkerYearsOfExperience)).getText().toString();
                 rating = ((EditText) findViewById(R.id.rating)).getText().toString();
                 location = ((EditText) findViewById(R.id.wlakerLocation)).getText().toString();
                 numberOfTrips = ((EditText) findViewById(R.id.numberOfTris)).getText().toString();
-                dogWalker = new DogWalkerClass(name, phoneNumber, yearsOfExperience, rating, location, "", numberOfTrips);
+                dogWalker = new DogWalkerClass(name, phoneNumber, rating, location, "", numberOfTrips);
 
                 dbRef = FirebaseDatabase.getInstance().getReference("");
                 String walkerUid = dbRef.push().getKey();
@@ -105,6 +106,13 @@ public class AdminActivity extends AppCompatActivity {
                 uploadFile(dogWalker.getWalkerId());
                 showToast("Data Uploaded");
 
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminActivity.this,WelcomeActivity.class));
             }
         });
     }
@@ -160,7 +168,7 @@ public class AdminActivity extends AppCompatActivity {
     }
 
 
-    public static Uri reduceImageSize(Context context, Uri uri) {
+    private static Uri reduceImageSize(Context context, Uri uri) {
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri));
