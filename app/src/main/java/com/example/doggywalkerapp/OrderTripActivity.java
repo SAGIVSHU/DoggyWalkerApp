@@ -62,7 +62,7 @@ public class OrderTripActivity extends DrawerBaseActivity {
 
         //drop list of the choices
         autoCompleteTextView = findViewById(R.id.auto_complete_txt);
-        adapterItems = new ArrayAdapter<String>(this, R.layout.list_item, days);
+        adapterItems = new ArrayAdapter<String>(this, R.layout.days_drop_list_item, days);
         autoCompleteTextView.setAdapter(adapterItems);
 
 

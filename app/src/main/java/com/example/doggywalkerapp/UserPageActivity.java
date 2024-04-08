@@ -1,5 +1,6 @@
 package com.example.doggywalkerapp;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,15 +26,6 @@ public class UserPageActivity extends DrawerBaseActivity {
     private StorageReference storageReference;
     private SharedPreferences sharedPreferences;
 
-    private UserClass getCurrentUser() {
-        sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("User", "");
-        UserClass user = gson.fromJson(json, UserClass.class);
-        return user;
-
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,13 +38,7 @@ public class UserPageActivity extends DrawerBaseActivity {
         UserClass currentUser = getCurrentUser();
         Log.d("eserUSer", currentUser.toString());
 
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                UserPageActivity.this.finish();
-                System.exit(0);
-            }
-        });
+
 
         final ImageView userImg = (ImageView) findViewById(R.id.profileImage);
         userImg.setImageResource(R.drawable.loading_image);
@@ -84,4 +70,24 @@ public class UserPageActivity extends DrawerBaseActivity {
 
 
     }
+
+
+
+    private UserClass getCurrentUser() {
+        sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("User", "");
+        UserClass user = gson.fromJson(json, UserClass.class);
+        return user;
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        finishAffinity();
+
+    }
+
 }

@@ -89,7 +89,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_corner"
                 android:hint="@string/userName"
-                android:inputType="text|textCapSentences"
+                android:inputType="textCapWords"
                 android:padding="18dp"
                 android:textColorHint="@color/white"
                 android:textSize="20sp" />
@@ -114,7 +114,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_corner"
                 android:hint="@string/dogRace"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:padding="18dp"
                 android:textColorHint="@color/white"
                 android:textSize="20sp" />
@@ -126,7 +126,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_corner"
                 android:hint="@string/location"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:padding="18dp"
                 android:textColorHint="@color/white"
                 android:textSize="20sp" />

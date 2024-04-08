@@ -6,22 +6,30 @@ import java.util.ArrayList;
 public class DogWalkerClass implements Serializable {
     private String dogWalkerName;
     private String dogWalkerPhoneNumber;
-    private String DogWalkerRating;
-    private String DogWalkerLocation;
+    private String dogWalkerRating;
+    private String dogWalkerLocation;
     private String walkerId;
-    private String WalkerSumOfTrips;
-
-    public DogWalkerClass(String dogWalkerName, String dogWalkerPhoneNumber, String dogWalkerRating, String dogWalkerLocation, String walkerId, String walkerSumOfTrips) {
-        this.dogWalkerName = dogWalkerName;
-        this.dogWalkerPhoneNumber = dogWalkerPhoneNumber;
-        this.DogWalkerRating = dogWalkerRating;
-        this.DogWalkerLocation = dogWalkerLocation;
-        this.walkerId = walkerId;
-        this.WalkerSumOfTrips = walkerSumOfTrips;
-    }
+    private String walkerSumOfTrips;
+    private String walkerSumRatedTrips;
 
     public DogWalkerClass() {
+
     }
+
+
+    public void DogWalkerClass(){}
+
+    public DogWalkerClass(String dogWalkerName, String dogWalkerPhoneNumber, String dogWalkerRating, String dogWalkerLocation, String walkerId, String walkerSumOfTrips, String walkerSumRatedTrips) {
+        this.dogWalkerName = dogWalkerName;
+        this.dogWalkerPhoneNumber = dogWalkerPhoneNumber;
+        this.dogWalkerRating = dogWalkerRating;
+        this.dogWalkerLocation = dogWalkerLocation;
+        this.walkerId = walkerId;
+        this.walkerSumOfTrips = walkerSumOfTrips;
+        this.walkerSumRatedTrips = walkerSumRatedTrips;
+    }
+
+
 
     public String getDogWalkerName() {
         return dogWalkerName;
@@ -40,19 +48,19 @@ public class DogWalkerClass implements Serializable {
     }
 
     public String getDogWalkerRating() {
-        return DogWalkerRating;
+        return dogWalkerRating;
     }
 
     public void setDogWalkerRating(String dogWalkerRating) {
-        DogWalkerRating = dogWalkerRating;
+        this.dogWalkerRating = dogWalkerRating;
     }
 
     public String getDogWalkerLocation() {
-        return DogWalkerLocation;
+        return dogWalkerLocation;
     }
 
     public void setDogWalkerLocation(String dogWalkerLocation) {
-        DogWalkerLocation = dogWalkerLocation;
+        this.dogWalkerLocation = dogWalkerLocation;
     }
 
     public String getWalkerId() {
@@ -64,11 +72,19 @@ public class DogWalkerClass implements Serializable {
     }
 
     public String getWalkerSumOfTrips() {
-        return WalkerSumOfTrips;
+        return walkerSumOfTrips;
     }
 
     public void setWalkerSumOfTrips(String walkerSumOfTrips) {
-        WalkerSumOfTrips = walkerSumOfTrips;
+        this.walkerSumOfTrips = walkerSumOfTrips;
+    }
+
+    public String getWalkerSumRatedTrips() {
+        return walkerSumRatedTrips;
+    }
+
+    public void setWalkerSumRatedTrips(String walkerSumRatedTrips) {
+        this.walkerSumRatedTrips = walkerSumRatedTrips;
     }
 
     @Override
@@ -76,10 +92,11 @@ public class DogWalkerClass implements Serializable {
         return "DogWalkerClass{" +
                 "dogWalkerName='" + dogWalkerName + '\'' +
                 ", dogWalkerPhoneNumber='" + dogWalkerPhoneNumber + '\'' +
-                ", DogWalkerRating='" + DogWalkerRating + '\'' +
-                ", DogWalkerLocation='" + DogWalkerLocation + '\'' +
+                ", dogWalkerRating='" + dogWalkerRating + '\'' +
+                ", dogWalkerLocation='" + dogWalkerLocation + '\'' +
                 ", walkerId='" + walkerId + '\'' +
-                ", WalkerSumOfTrips='" + WalkerSumOfTrips + '\'' +
+                ", walkerSumOfTrips='" + walkerSumOfTrips + '\'' +
+                ", sumRatedTrips='" + walkerSumRatedTrips + '\'' +
                 '}';
     }
 }

@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="125dp"
     android:layout_margin="16dp"
-    android:background="@drawable/main_background"
     app:cardCornerRadius="16dp"
     app:cardElevation="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:orientation="horizontal">
 
         <ImageView
@@ -31,31 +31,37 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@string/name2"
+                android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
+
                 android:layout_marginTop="8dp"
                 android:text="@string/phone_number2"
+                android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/location2"
+                android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/rating2"
+                android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -68,38 +74,46 @@
 
             <TextView
                 android:id="@+id/dogWalkerName"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:maxLength="10"
                 android:text="@string/name"
+                android:textColor="@color/black"
                 android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/dogWalkerPhone"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:maxLength="10"
                 android:text="0584123544"
+                android:textColor="@color/black"
                 android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/dogWalkerLocation"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:maxLength="10"
                 android:text="@string/location"
+                android:textColor="@color/black"
                 android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/dogWalkerRating"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:maxLength="10"
                 android:text="@string/rating"
+                android:textColor="@color/black"
                 android:textSize="17sp" />
         </LinearLayout>
     </LinearLayout>

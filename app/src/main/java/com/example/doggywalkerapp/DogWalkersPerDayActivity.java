@@ -116,11 +116,13 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
 
                         //create a trip class
                         String currentDay = new SimpleDateFormat("EEEE").format(new Date()); //day at the moment
+
                         currentTrip = new TripClass(pickedWalker, currentDay, currentDate, pickedDay, personWhoOrdered.getUid());
                         saveTripToDB();
+                        deleteDogWalkerById();
                         Log.d("tripTripgig", currentTrip.toString());
                         showToast(pickedWalker.getDogWalkerName() + " was ordered for " + pickedDay);
-                        startActivity(new Intent(DogWalkersPerDayActivity.this,UserPageActivity.class));
+                        startActivity(new Intent(DogWalkersPerDayActivity.this, UserPageActivity.class));
                     } else {
                         showToast("You already ordered a trip for " + pickedDay);
                     }
@@ -178,6 +180,21 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
         UserClass user = gson.fromJson(json, UserClass.class);
         return user;
 
+    }
+
+    private void deleteDogWalkerById() {
+        if (pickedWalker != null) {
+            String dogWalkerId = pickedWalker.getWalkerId();
+            DatabaseReference deleteDogWalker = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + pickedDay + "/" + dogWalkerId);
+            deleteDogWalker.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.d("deleted","yes the dog walker was deleted");
+                }
+            });
+
+
+        }
     }
 
     private void showToast(String text) {

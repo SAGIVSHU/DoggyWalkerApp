@@ -28,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.util.Objects;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -112,15 +114,20 @@ public class LoginActivity extends AppCompatActivity {
                         userRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                //search for the user with the fire auth id
                                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                    UserClass user = postSnapshot.getValue(UserClass.class);
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(user);
-                                    editor.putString("User", json);
-                                    editor.apply();
-                                    final Handler handler = new Handler();
-                                    handler.postDelayed(r, 500);
+                                    String currentUid = Objects.requireNonNull(postSnapshot.getValue(UserClass.class)).getUid();
+                                    if (currentUid.equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
+                                        UserClass user = postSnapshot.getValue(UserClass.class);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        Gson gson = new Gson();
+                                        String json = gson.toJson(user);
+                                        editor.putString("User", json);
+                                        editor.apply();
+                                        final Handler handler = new Handler();
+                                        handler.postDelayed(r, 500);
+                                    }
 
                                 }
                             }

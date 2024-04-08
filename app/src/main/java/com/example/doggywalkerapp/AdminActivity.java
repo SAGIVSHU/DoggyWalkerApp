@@ -50,7 +50,7 @@ public class AdminActivity extends AppCompatActivity {
     private Uri imageUri;
     private DogWalkerClass dogWalker;
     private DatabaseReference dbRef;
-    private String name, phoneNumber, location, numberOfTrips, rating;
+    private String name, phoneNumber, location, numberOfTrips, rating, ratedTrips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +93,9 @@ public class AdminActivity extends AppCompatActivity {
                 rating = ((EditText) findViewById(R.id.rating)).getText().toString();
                 location = ((EditText) findViewById(R.id.wlakerLocation)).getText().toString();
                 numberOfTrips = ((EditText) findViewById(R.id.numberOfTris)).getText().toString();
-                dogWalker = new DogWalkerClass(name, phoneNumber, rating, location, "", numberOfTrips);
+                ratedTrips = ((EditText) findViewById(R.id.numberOfRatedTrips)).getText().toString();
+
+                dogWalker = new DogWalkerClass(name, phoneNumber, rating, location, "", numberOfTrips,ratedTrips);
 
                 dbRef = FirebaseDatabase.getInstance().getReference("");
                 String walkerUid = dbRef.push().getKey();

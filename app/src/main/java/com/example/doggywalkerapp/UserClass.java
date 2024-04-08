@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class UserClass implements Serializable {
     private String userName;
     private String email;
-    private String password;
     private String phoneNumber;
     private String dogRace;
     private String location;
@@ -15,10 +14,9 @@ public class UserClass implements Serializable {
     public UserClass() {
     }
 
-    public UserClass(String email, String userName, String password, String phoneNumber, String dogRace, String location, String uid) {
+    public UserClass(String email, String userName, String phoneNumber, String dogRace, String location, String uid) {
         this.email = email;
         this.userName = userName;
-        this.password = password;
         this.phoneNumber = phoneNumber;
         this.dogRace = dogRace;
         this.location = location;
@@ -42,13 +40,7 @@ public class UserClass implements Serializable {
         this.userName = userName;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -87,7 +79,6 @@ public class UserClass implements Serializable {
         return "UserClass{" +
                 "userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", dogRace='" + dogRace + '\'' +
                 ", location='" + location + '\'' +

@@ -236,17 +236,16 @@ public class RegisterActivity extends AppCompatActivity {
                     String phoneNumber = phoneEt.getText().toString();
                     String race = raceEt.getText().toString();
                     String finalLocation = locationEt.getText().toString();
-                    String email = emailEt.getText().toString();
+                    String userEmail = emailEt.getText().toString();
 
-                    user = new UserClass(email,
+                    user = new UserClass(userEmail,
                             userName,
-                            userPassword,
                             phoneNumber,
                             race,
                             finalLocation,
                             "");
 
-                    regUser();
+                    regUser(userEmail,userPassword);
                     Log.d("afterCreate", user.getUid());
                     Log.d("afterCreate2", user.getUid());
 
@@ -254,14 +253,14 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 if (emailEt == null || !emailFlag) {
-                    emailEt.setTextSize(12);
+                    emailEt.setTextSize(13);
                     emailEt.setEnabled(false);
                     emailEt.setHintTextColor(getResources().getColor(R.color.red));
                     emailEt.setHint("Enter your email correctly");
                     emailEt.setText("");
                 }
                 if (passEt == null || !passFlag) {
-                    passEt.setTextSize(12);
+                    passEt.setTextSize(13);
                     passEt.setEnabled(false);
                     passEt.setHintTextColor(getResources().getColor(R.color.red));
                     passEt.setHint("Include at least: 8 characters, one letter and one number");
@@ -271,21 +270,21 @@ public class RegisterActivity extends AppCompatActivity {
                     phoneEt.setText("");
                     phoneEt.setEnabled(false);
                     phoneEt.setHint("Phone number must start with 05");
-                    phoneEt.setTextSize(12);
+                    phoneEt.setTextSize(13);
                     phoneEt.setHintTextColor(getResources().getColor(R.color.red));
                 }
                 if (!userFlag || userEt == null) {
                     userEt.setText("");
                     userEt.setEnabled(false);
                     userEt.setHint("One word which should include alphabets and length of 3-8");
-                    userEt.setTextSize(12);
+                    userEt.setTextSize(13);
                     userEt.setHintTextColor(getResources().getColor(R.color.red));
                 }
                 if (raceEt == null || raceEt.getText().toString().equals("")) {
                     raceEt.setText("");
                     raceEt.setEnabled(false);
                     raceEt.setHint("Cannot be empty");
-                    raceEt.setTextSize(12);
+                    raceEt.setTextSize(13);
                     raceEt.setHintTextColor(getResources().getColor(R.color.red));
                 }
                 if (locationEt == null || locationEt.getText().toString().equals("")) {
@@ -293,7 +292,7 @@ public class RegisterActivity extends AppCompatActivity {
                     locationEt.setText("");
                     locationEt.setEnabled(false);
                     locationEt.setHint("Cannot be empty");
-                    locationEt.setTextSize(12);
+                    locationEt.setTextSize(13);
                     locationEt.setHintTextColor(getResources().getColor(R.color.red));
                 }
 
@@ -350,7 +349,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 emailEt.setTextSize(20);
-                emailEt.setHint(getResources().getString(R.string.userName));
+                emailEt.setHint(getResources().getString(R.string.email));
                 emailEt.setHintTextColor(getResources().getColor(R.color.white));
             }
         });
@@ -428,8 +427,8 @@ public class RegisterActivity extends AppCompatActivity {
         Log.e(TAG, "pick Camera X");
     }
 
-    private void regUser() {
-        firebaseAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).
+    private void regUser(String email, String password) {
+        firebaseAuth.createUserWithEmailAndPassword(email,password).
                 addOnCompleteListener(this,
                         new OnCompleteListener<AuthResult>() {
                             @SuppressLint("SetTextI18n")
