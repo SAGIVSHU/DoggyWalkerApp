@@ -93,17 +93,6 @@
                     android:textColorHint="@color/white"
                     android:textSize="20sp" />
 
-                <EditText
-                    android:id="@+id/numberOfTris"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rounded_corner"
-                    android:hint="@string/number_of_trips"
-                    android:inputType="number"
-                    android:padding="18dp"
-                    android:textColorHint="@color/white"
-                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/numberOfRatedTrips"

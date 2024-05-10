@@ -37,6 +37,13 @@
     <string name="location2">Location:</string>
     <string name="rating2">Rating:</string>
     <string name="back">Back</string>
+    <string name="rate_your_trips">Rate Your Trips</string>
+    <string name="walker_name">Walker Name:</string>
+    <string name="day_of_occurrence">Day Of Occurrence:</string>
+    <string name="walker_phone">Walker Phone:</string>
+    <string name="day">Day</string>
+    <string name="your_future_trips">Your Future Trips</string>
+    <string name="trips_of_this_week">Trips Of This Week</string>
 
 
 </resources>

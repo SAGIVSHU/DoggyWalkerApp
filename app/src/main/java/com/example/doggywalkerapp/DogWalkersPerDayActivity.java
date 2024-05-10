@@ -28,17 +28,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
 
 public class DogWalkersPerDayActivity extends DrawerBaseActivity implements RecyclerViewInterface {
     private ActivityDogWalkersPerDayBinding activityDogWalkersPerDayBinding;
     private RecyclerView recyclerView;
-    private DatabaseReference databaseReference;
+    private DatabaseReference pickedDayDatabaseReference;
     private DogWalkerAdapter adapter;
-    private ArrayList<DogWalkerClass> list;
+    private ArrayList<DogWalkerClass> dogWalkersList; //arraylist of the dog walkers for the picked day
     private Dialog dialog;
     private TextView yesDialog, noDialog, mainTextDialog;
     private DogWalkerClass pickedWalker;
@@ -52,38 +50,45 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //menu part
         activityDogWalkersPerDayBinding = ActivityDogWalkersPerDayBinding.inflate(getLayoutInflater());
         setContentView(activityDogWalkersPerDayBinding.getRoot());
         allocateActivityTitle("Order a Trip");
 
-        isOrdered = false; // the user didn't order yet
+        isOrdered = false; // the user didn't order yet 
 
         personWhoOrdered = getCurrentUser(); // get current user by shared presences
-        futureTripDbRef = FirebaseDatabase.getInstance().getReference("Users/" + personWhoOrdered.getUid() + "/FutureTrips"); //data base
+        //data base for write into future trips folder 
+        futureTripDbRef = FirebaseDatabase.getInstance().getReference("Users/" + personWhoOrdered.getUid() + "/FutureTrips");
 
 
+        //get the day from the previous intent
         Intent intent = getIntent();
-        pickedDay = intent.getStringExtra("DAY_KEY"); //get the day from the previous intent
+        pickedDay = intent.getStringExtra("DAY_KEY");
+
 
         //RecycleView Part
+
         recyclerView = findViewById(R.id.dogWalkersList);
-        databaseReference = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + pickedDay); // get the data from the day
+        // get the data from the picked day
+        pickedDayDatabaseReference = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + pickedDay);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        list = new ArrayList<>();
-        adapter = new DogWalkerAdapter(this, list, this);
+        // create an empty list of dog walkers and connect the adapter to the recycle view
+        dogWalkersList = new ArrayList<>();
+        adapter = new DogWalkerAdapter(this, dogWalkersList, this);
         recyclerView.setAdapter(adapter);
 
 
-        //Get data from database to list
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        //Get all dog walkers from the picked day in firebase to list
+        pickedDayDatabaseReference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     DogWalkerClass dogWalker = dataSnapshot.getValue(DogWalkerClass.class);
-                    list.add(dogWalker);
+                    dogWalkersList.add(dogWalker);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -105,24 +110,26 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
         mainTextDialog = (TextView) dialog.findViewById(R.id.mainTxt);
 
         yesDialog.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("UnsafeIntentLaunch")
             @Override
             public void onClick(View v) {
-                if (pickedDay != null) {
+                if (pickedDay != null && pickedWalker != null) {
                     if (!isOrdered) {
-                        //get and set current date and time
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                        Date date = new Date();
-                        String currentDate = formatter.format(date);
 
-                        //create a trip class
-                        String currentDay = new SimpleDateFormat("EEEE").format(new Date()); //day at the moment
+                        HandleOrderTripClass handleOrderTripClass = new HandleOrderTripClass(pickedWalker, pickedDay, personWhoOrdered.getUid());
 
-                        currentTrip = new TripClass(pickedWalker, currentDay, currentDate, pickedDay, personWhoOrdered.getUid());
-                        saveTripToDB();
-                        deleteDogWalkerById();
-                        Log.d("tripTripgig", currentTrip.toString());
-                        showToast(pickedWalker.getDogWalkerName() + " was ordered for " + pickedDay);
-                        startActivity(new Intent(DogWalkersPerDayActivity.this, UserPageActivity.class));
+                        if (handleOrderTripClass.bookTrip("DogWalkersFolder/" + pickedDay)) {
+                            showToast(pickedWalker.getDogWalkerName() + " was ordered for " + pickedDay);
+                            startActivity(new Intent(DogWalkersPerDayActivity.this, UserPageActivity.class)); // finally new intent
+
+                        } else {
+                            //refresh the activity
+                            Log.d("RefreshSagiv","Gugu");
+                            finish();
+                            startActivity(getIntent());
+                        }
+
+
                     } else {
                         showToast("You already ordered a trip for " + pickedDay);
                     }
@@ -139,36 +146,36 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
         });
     }
 
-
+    //recycle view on click function (implementation of the interface)
     @SuppressLint("SetTextI18n")
     @Override
     public void onItemClick(int position) {
         mainTextDialog.setText("Do you want to order a trip for " + pickedDay);
-        pickedWalker = list.get(position);
+        pickedWalker = dogWalkersList.get(position);
         dialog.show();
     }
 
+    //save a trip function
     private void saveTripToDB() {
         String tripId = futureTripDbRef.push().getKey();
         if (currentTrip != null && tripId != null) {
 
             currentTrip.setTripId(tripId);
-            futureTripDbRef.child(tripId).setValue(currentTrip)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            isOrdered = true;// set the flag for true and now the user cant order again
-                            // Data successfully saved
-                            Log.d(TAG, "Trip saved successfully!");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Handle error
-                            Log.e(TAG, "Error saving trip: " + e.getMessage());
-                        }
-                    });
+            futureTripDbRef.child(tripId).setValue(currentTrip).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // set the flag for true and now the user cant order again for that activity
+                    isOrdered = true;
+                    // Data successfully saved
+                    Log.d(TAG, "Trip saved successfully!");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Handle error
+                    Log.e(TAG, "Error saving trip: " + e.getMessage());
+                }
+            });
         }
     }
 
@@ -182,6 +189,7 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
 
     }
 
+    // delete dog walker after ordering function
     private void deleteDogWalkerById() {
         if (pickedWalker != null) {
             String dogWalkerId = pickedWalker.getWalkerId();
@@ -189,7 +197,7 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
             deleteDogWalker.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    Log.d("deleted","yes the dog walker was deleted");
+                    Log.d("deleted", "yes the dog walker was deleted");
                 }
             });
 
@@ -197,10 +205,10 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
         }
     }
 
+    //show toast function
     private void showToast(String text) {
         LayoutInflater inflater = getLayoutInflater();
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-        View my_toast = inflater.inflate(R.layout.my_toast, findViewById(R.id.my_toast));
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) View my_toast = inflater.inflate(R.layout.my_toast, findViewById(R.id.my_toast));
         TextView tv = my_toast.findViewById(R.id.tv_my_toast);
         tv.setText(text);
         Toast toast = new Toast(DogWalkersPerDayActivity.this);

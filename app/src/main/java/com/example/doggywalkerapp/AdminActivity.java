@@ -43,6 +43,8 @@ public class AdminActivity extends AppCompatActivity {
     private StorageTask uploadStorageTask;
     private ActivityResultLauncher<String> getContent;
 
+
+    //array of week days for easy saving
     private String[] days = new String[]{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
 
@@ -50,7 +52,7 @@ public class AdminActivity extends AppCompatActivity {
     private Uri imageUri;
     private DogWalkerClass dogWalker;
     private DatabaseReference dbRef;
-    private String name, phoneNumber, location, numberOfTrips, rating, ratedTrips;
+    private String name, phoneNumber, location, rating, ratedTrips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +94,9 @@ public class AdminActivity extends AppCompatActivity {
                 phoneNumber = ((EditText) findViewById(R.id.walkerPhoneNumber)).getText().toString();
                 rating = ((EditText) findViewById(R.id.rating)).getText().toString();
                 location = ((EditText) findViewById(R.id.wlakerLocation)).getText().toString();
-                numberOfTrips = ((EditText) findViewById(R.id.numberOfTris)).getText().toString();
                 ratedTrips = ((EditText) findViewById(R.id.numberOfRatedTrips)).getText().toString();
 
-                dogWalker = new DogWalkerClass(name, phoneNumber, rating, location, "", numberOfTrips,ratedTrips);
+                dogWalker = new DogWalkerClass(name, phoneNumber, rating, location, "none",ratedTrips);
 
                 dbRef = FirebaseDatabase.getInstance().getReference("");
                 String walkerUid = dbRef.push().getKey();
@@ -105,7 +106,7 @@ public class AdminActivity extends AppCompatActivity {
                     saveDogWalkerToDB(day);
                 }
                 saveDogWalkerToDB("DogWalkers");
-                uploadFile(dogWalker.getWalkerId());
+                uploadImage(dogWalker.getWalkerId());
                 showToast("Data Uploaded");
 
             }
@@ -149,7 +150,7 @@ public class AdminActivity extends AppCompatActivity {
     }
 
 
-    private void uploadFile(String uidForUpload) {
+    private void uploadImage(String uidForUpload) {
         if (imageUri != null) {
             imageUri = reduceImageSize(AdminActivity.this, imageUri);
             StorageReference fileReference = storageReference.child(uidForUpload);

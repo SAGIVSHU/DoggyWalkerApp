@@ -9,7 +9,6 @@ public class DogWalkerClass implements Serializable {
     private String dogWalkerRating;
     private String dogWalkerLocation;
     private String walkerId;
-    private String walkerSumOfTrips;
     private String walkerSumRatedTrips;
 
     public DogWalkerClass() {
@@ -19,17 +18,14 @@ public class DogWalkerClass implements Serializable {
 
     public void DogWalkerClass(){}
 
-    public DogWalkerClass(String dogWalkerName, String dogWalkerPhoneNumber, String dogWalkerRating, String dogWalkerLocation, String walkerId, String walkerSumOfTrips, String walkerSumRatedTrips) {
+    public DogWalkerClass(String dogWalkerName, String dogWalkerPhoneNumber, String dogWalkerRating, String dogWalkerLocation, String walkerId, String walkerSumRatedTrips) {
         this.dogWalkerName = dogWalkerName;
         this.dogWalkerPhoneNumber = dogWalkerPhoneNumber;
         this.dogWalkerRating = dogWalkerRating;
         this.dogWalkerLocation = dogWalkerLocation;
         this.walkerId = walkerId;
-        this.walkerSumOfTrips = walkerSumOfTrips;
         this.walkerSumRatedTrips = walkerSumRatedTrips;
     }
-
-
 
     public String getDogWalkerName() {
         return dogWalkerName;
@@ -71,13 +67,7 @@ public class DogWalkerClass implements Serializable {
         this.walkerId = walkerId;
     }
 
-    public String getWalkerSumOfTrips() {
-        return walkerSumOfTrips;
-    }
 
-    public void setWalkerSumOfTrips(String walkerSumOfTrips) {
-        this.walkerSumOfTrips = walkerSumOfTrips;
-    }
 
     public String getWalkerSumRatedTrips() {
         return walkerSumRatedTrips;
@@ -95,8 +85,7 @@ public class DogWalkerClass implements Serializable {
                 ", dogWalkerRating='" + dogWalkerRating + '\'' +
                 ", dogWalkerLocation='" + dogWalkerLocation + '\'' +
                 ", walkerId='" + walkerId + '\'' +
-                ", walkerSumOfTrips='" + walkerSumOfTrips + '\'' +
-                ", sumRatedTrips='" + walkerSumRatedTrips + '\'' +
+                ", walkerSumRatedTrips='" + walkerSumRatedTrips + '\'' +
                 '}';
     }
 }

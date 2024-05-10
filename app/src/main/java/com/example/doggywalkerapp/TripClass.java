@@ -14,7 +14,7 @@ public class TripClass extends DogWalkerClass implements Serializable {
     }
 
     public TripClass(DogWalkerClass dogWalker, String orderDay, String orderDate,String tripOccurDay, String personWhoOrderedUid) {
-        super(dogWalker.getDogWalkerName(), dogWalker.getDogWalkerPhoneNumber(), dogWalker.getDogWalkerRating(), dogWalker.getDogWalkerLocation(), dogWalker.getWalkerId(), dogWalker.getWalkerSumOfTrips(), dogWalker.getWalkerSumRatedTrips());
+        super(dogWalker.getDogWalkerName(), dogWalker.getDogWalkerPhoneNumber(), dogWalker.getDogWalkerRating(), dogWalker.getDogWalkerLocation(), dogWalker.getWalkerId(), dogWalker.getWalkerSumRatedTrips());
         this.orderDate = orderDate;
         this.orderDay = orderDay;
         this.personWhoOrderedUid = personWhoOrderedUid;

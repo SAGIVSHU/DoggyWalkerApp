@@ -1,6 +1,8 @@
 package com.example.doggywalkerapp;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -51,14 +53,20 @@ public class OrderTripActivity extends DrawerBaseActivity {
         setContentView(activityOrderTripBinding.getRoot());
         allocateActivityTitle("Order a Trip");
 
-        currentUser = getCurrentUser(); // get user that is using know
-        userFutureTripsList = new ArrayList<>(); //set the arrayList
+        // get user that is using now
+        currentUser = getCurrentUser();
+        
+        //set the arrayList of the current user future trips
+        userFutureTripsList = new ArrayList<>(); 
 
+        //reference of the user
         futureTripDbRef = FirebaseDatabase.getInstance().getReference("Users/" + currentUser.getUid() + "/FutureTrips"); // set reference for data base
 
-        currentDay = new SimpleDateFormat("EEEE").format(new Date()); //day at the moment
+        //day at the moment
+        currentDay = new SimpleDateFormat("EEEE").format(new Date());
 
-        orderBt = (Button) findViewById(R.id.orderBt); //order button
+        //order button
+        orderBt = (Button) findViewById(R.id.orderBt); 
 
         //drop list of the choices
         autoCompleteTextView = findViewById(R.id.auto_complete_txt);
@@ -95,19 +103,37 @@ public class OrderTripActivity extends DrawerBaseActivity {
         orderBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //build the dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(OrderTripActivity.this);
+
+                builder.setCancelable(false);
+
+                // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
+                builder.setPositiveButton("Ok", (DialogInterface.OnClickListener) (dialog, which) -> {
+                    dialog.dismiss();
+                });
+
+
+                //Create the dialog
+                AlertDialog alertDialog = builder.create();
+
                 if (pickedDay.equals("")) {
-                    showToast("Day wasn't picked");
+                    alertDialog.setMessage("Day wasn't picked");
+                    alertDialog.show();
                 } else {
                     if (!isValidDay(currentDay, pickedDay, days)) {
-                        showToast(pickedDay + " has already passed");
+                        alertDialog.setMessage(pickedDay + " has already passed");
+                        alertDialog.show();
                     } else {
-                        if (!IsTripExist()) {
+                        if (!IsTripExistInFutureTrips()) {
                             Intent intent = new Intent(OrderTripActivity.this, DogWalkersPerDayActivity.class);
                             intent.putExtra("DAY_KEY", pickedDay);
                             startActivity(intent);
                             finish();
                         } else {
-                            showToast("You already have a trip for " + pickedDay);
+                            alertDialog.setMessage("You already have a trip for " + pickedDay);
+                            alertDialog.show();
                         }
                     }
 
@@ -147,14 +173,13 @@ public class OrderTripActivity extends DrawerBaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("User", "");
-        UserClass user = gson.fromJson(json, UserClass.class);
-        return user;
+        return gson.fromJson(json, UserClass.class);
 
     }
 
 
     //function for knowing if there is already trip that occurs at the picked day
-    private boolean IsTripExist() {
+    private boolean IsTripExistInFutureTrips() {
         for (TripClass trip : userFutureTripsList) {
             if (userFutureTripsList != null && trip.getTripOccurDay().equals(pickedDay)) {
                 return true;
