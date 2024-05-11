@@ -106,7 +106,6 @@ public class OrderTripActivity extends DrawerBaseActivity {
 
                 //build the dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(OrderTripActivity.this);
-
                 builder.setCancelable(false);
 
                 // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.

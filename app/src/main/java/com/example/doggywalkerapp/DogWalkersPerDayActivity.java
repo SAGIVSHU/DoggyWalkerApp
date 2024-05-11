@@ -3,7 +3,10 @@ package com.example.doggywalkerapp;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -34,8 +37,9 @@ import java.util.Objects;
 public class DogWalkersPerDayActivity extends DrawerBaseActivity implements RecyclerViewInterface {
     private ActivityDogWalkersPerDayBinding activityDogWalkersPerDayBinding;
     private RecyclerView recyclerView;
-    private DatabaseReference pickedDayDatabaseReference;
     private DogWalkerAdapter adapter;
+
+    private DatabaseReference pickedDayDatabaseReference;
     private ArrayList<DogWalkerClass> dogWalkersList; //arraylist of the dog walkers for the picked day
     private Dialog dialog;
     private TextView yesDialog, noDialog, mainTextDialog;
@@ -44,6 +48,8 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
     private UserClass personWhoOrdered;
     private DatabaseReference futureTripDbRef;
     private TripClass currentTrip;
+    private ProgressDialog progressDialog;
+
     private boolean isOrdered; // a flag for knowing if the current user already ordered a trip in this activity;
 
     @SuppressLint("SimpleDateFormat")
@@ -60,6 +66,10 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
         personWhoOrdered = getCurrentUser(); // get current user by shared presences
         //data base for write into future trips folder 
         futureTripDbRef = FirebaseDatabase.getInstance().getReference("Users/" + personWhoOrdered.getUid() + "/FutureTrips");
+
+
+        //Create progressDialog
+        progressDialog = new ProgressDialog(this);
 
 
         //get the day from the previous intent
@@ -109,6 +119,21 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
         noDialog = (TextView) dialog.findViewById(R.id.noTxt);
         mainTextDialog = (TextView) dialog.findViewById(R.id.mainTxt);
 
+
+        //build the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(DogWalkersPerDayActivity.this);
+        builder.setCancelable(false);
+
+        // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
+        builder.setPositiveButton("Ok", (DialogInterface.OnClickListener) (dialog, which) -> {
+            finish();
+            startActivity(getIntent());
+            dialog.dismiss();
+        });
+
+
+        //Create the dialog
+        AlertDialog alertDialog = builder.create();
         yesDialog.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("UnsafeIntentLaunch")
             @Override
@@ -116,19 +141,25 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
                 if (pickedDay != null && pickedWalker != null) {
                     if (!isOrdered) {
 
-                        HandleOrderTripClass handleOrderTripClass = new HandleOrderTripClass(pickedWalker, pickedDay, personWhoOrdered.getUid());
+                        progressDialog.setMessage("Checking Data...");
+                        progressDialog.show();
+                        //create the class that handle couples of orders at the same time
+                        HandleOrderTripClass handleOrderTripClass = new HandleOrderTripClass();
 
-                        if (handleOrderTripClass.bookTrip("DogWalkersFolder/" + pickedDay)) {
+
+
+                        if (handleOrderTripClass.bookTrip("DogWalkersFolder/" + pickedDay,pickedWalker, pickedDay, personWhoOrdered.getUid())) {
                             showToast(pickedWalker.getDogWalkerName() + " was ordered for " + pickedDay);
                             startActivity(new Intent(DogWalkersPerDayActivity.this, UserPageActivity.class)); // finally new intent
 
                         } else {
+                            alertDialog.setMessage(pickedWalker.getDogWalkerName() + " is taken");
+                            alertDialog.show();
                             //refresh the activity
-                            Log.d("RefreshSagiv","Gugu");
-                            finish();
-                            startActivity(getIntent());
-                        }
+                            Log.d("RefreshSagiv", "Gugu");
 
+                        }
+                        dialog.dismiss();
 
                     } else {
                         showToast("You already ordered a trip for " + pickedDay);
