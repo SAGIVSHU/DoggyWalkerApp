@@ -38,7 +38,6 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
     private ActivityDogWalkersPerDayBinding activityDogWalkersPerDayBinding;
     private RecyclerView recyclerView;
     private DogWalkerAdapter adapter;
-
     private DatabaseReference pickedDayDatabaseReference;
     private ArrayList<DogWalkerClass> dogWalkersList; //arraylist of the dog walkers for the picked day
     private Dialog dialog;
@@ -49,17 +48,22 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
     private DatabaseReference futureTripDbRef;
     private TripClass currentTrip;
     private ProgressDialog progressDialog;
-
     private boolean isOrdered; // a flag for knowing if the current user already ordered a trip in this activity;
 
     @SuppressLint("SimpleDateFormat")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //get the day from the previous intent
+        Intent intent = getIntent();
+        pickedDay = intent.getStringExtra("DAY_KEY");
+
+
         //menu part
         activityDogWalkersPerDayBinding = ActivityDogWalkersPerDayBinding.inflate(getLayoutInflater());
         setContentView(activityDogWalkersPerDayBinding.getRoot());
-        allocateActivityTitle("Order a Trip");
+        allocateActivityTitle(pickedDay);
 
         isOrdered = false; // the user didn't order yet 
 
@@ -72,14 +76,9 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
         progressDialog = new ProgressDialog(this);
 
 
-        //get the day from the previous intent
-        Intent intent = getIntent();
-        pickedDay = intent.getStringExtra("DAY_KEY");
-
-
         //RecycleView Part
 
-        recyclerView = findViewById(R.id.dogWalkersList);
+        recyclerView = findViewById(R.id.dogWalkersListRcVie);
         // get the data from the picked day
         pickedDayDatabaseReference = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + pickedDay);
         recyclerView.setHasFixedSize(true);
@@ -92,8 +91,8 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
 
 
         //Get all dog walkers from the picked day in firebase to list
-        pickedDayDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
+        pickedDayDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -101,6 +100,7 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
                     dogWalkersList.add(dogWalker);
                 }
                 adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -147,18 +147,34 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
                         HandleOrderTripClass handleOrderTripClass = new HandleOrderTripClass();
 
 
+                        handleOrderTripClass.bookTrip("DogWalkersFolder/" + pickedDay, pickedWalker, pickedDay, personWhoOrdered.getUid()
+                                , new BookingCallback() {
+                                    @Override
+                                    public void onBookingSuccess() {
+                                        showToast(pickedWalker.getDogWalkerName() + " was ordered for " + pickedDay);
+                                        startActivity(new Intent(DogWalkersPerDayActivity.this, UserPageActivity.class));
+                                    }
 
-                        if (handleOrderTripClass.bookTrip("DogWalkersFolder/" + pickedDay,pickedWalker, pickedDay, personWhoOrdered.getUid())) {
-                            showToast(pickedWalker.getDogWalkerName() + " was ordered for " + pickedDay);
-                            startActivity(new Intent(DogWalkersPerDayActivity.this, UserPageActivity.class)); // finally new intent
+                                    @Override
+                                    public void onBookingFailure() {
+                                        alertDialog.setMessage(pickedWalker.getDogWalkerName() + " is taken");
+                                        alertDialog.show();
+                                        //refresh the activity
+                                        Log.d("RefreshSagiv", "Gugu");
+                                    }
+                                });
 
-                        } else {
-                            alertDialog.setMessage(pickedWalker.getDogWalkerName() + " is taken");
-                            alertDialog.show();
-                            //refresh the activity
-                            Log.d("RefreshSagiv", "Gugu");
-
-                        }
+//                        if (handleOrderTripClass.bookTrip("DogWalkersFolder/" + pickedDay,pickedWalker, pickedDay, personWhoOrdered.getUid())) {
+//                            showToast(pickedWalker.getDogWalkerName() + " was ordered for " + pickedDay);
+//                            startActivity(new Intent(DogWalkersPerDayActivity.this, UserPageActivity.class)); // finally new intent
+//
+//                        } else {
+//                            alertDialog.setMessage(pickedWalker.getDogWalkerName() + " is taken");
+//                            alertDialog.show();
+//                            //refresh the activity
+//                            Log.d("RefreshSagiv", "Gugu");
+//
+//                        }
                         dialog.dismiss();
 
                     } else {

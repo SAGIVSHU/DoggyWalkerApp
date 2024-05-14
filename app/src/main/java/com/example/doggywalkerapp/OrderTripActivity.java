@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,6 +44,7 @@ public class OrderTripActivity extends DrawerBaseActivity {
     private DatabaseReference futureTripDbRef;
     private UserClass currentUser;
     private ArrayList<TripClass> userFutureTripsList;
+    private DatabaseReference pickedDayDatabaseReference;
 
 
     @SuppressLint("SimpleDateFormat")
@@ -55,9 +57,9 @@ public class OrderTripActivity extends DrawerBaseActivity {
 
         // get user that is using now
         currentUser = getCurrentUser();
-        
+
         //set the arrayList of the current user future trips
-        userFutureTripsList = new ArrayList<>(); 
+        userFutureTripsList = new ArrayList<>();
 
         //reference of the user
         futureTripDbRef = FirebaseDatabase.getInstance().getReference("Users/" + currentUser.getUid() + "/FutureTrips"); // set reference for data base
@@ -66,7 +68,7 @@ public class OrderTripActivity extends DrawerBaseActivity {
         currentDay = new SimpleDateFormat("EEEE").format(new Date());
 
         //order button
-        orderBt = (Button) findViewById(R.id.orderBt); 
+        orderBt = (Button) findViewById(R.id.orderBt);
 
         //drop list of the choices
         autoCompleteTextView = findViewById(R.id.auto_complete_txt);
@@ -91,13 +93,38 @@ public class OrderTripActivity extends DrawerBaseActivity {
         });
 
 
+        ArrayList<DogWalkerClass> dogWalkersList = new ArrayList<>();
+
         //get the picked day of the user
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 pickedDay = adapterView.getItemAtPosition(i).toString();
+
+
+                // Handle a case where the picked day is empty
+                pickedDayDatabaseReference = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + pickedDay);
+
+                pickedDayDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            DogWalkerClass dogWalker = dataSnapshot.getValue(DogWalkerClass.class);
+                            dogWalkersList.add(dogWalker);
+                        }
+                        Log.d("dogdog", dogWalkersList.toString());
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
+
 
         //handle order button click
         orderBt.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +144,7 @@ public class OrderTripActivity extends DrawerBaseActivity {
                 //Create the dialog
                 AlertDialog alertDialog = builder.create();
 
+
                 if (pickedDay.equals("")) {
                     alertDialog.setMessage("Day wasn't picked");
                     alertDialog.show();
@@ -124,17 +152,19 @@ public class OrderTripActivity extends DrawerBaseActivity {
                     if (!isValidDay(currentDay, pickedDay, days)) {
                         alertDialog.setMessage(pickedDay + " has already passed");
                         alertDialog.show();
+                    } else if (dogWalkersList.isEmpty()) {
+                        alertDialog.setMessage("There Is No Trips " + pickedDay);
+                        alertDialog.show();
+                    } else if (!IsTripExistInFutureTrips()) {
+                        Intent intent = new Intent(OrderTripActivity.this, DogWalkersPerDayActivity.class);
+                        intent.putExtra("DAY_KEY", pickedDay);
+                        startActivity(intent);
+                        finish();
                     } else {
-                        if (!IsTripExistInFutureTrips()) {
-                            Intent intent = new Intent(OrderTripActivity.this, DogWalkersPerDayActivity.class);
-                            intent.putExtra("DAY_KEY", pickedDay);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            alertDialog.setMessage("You already have a trip for " + pickedDay);
-                            alertDialog.show();
-                        }
+                        alertDialog.setMessage("You already have a trip for " + pickedDay);
+                        alertDialog.show();
                     }
+
 
                 }
             }
