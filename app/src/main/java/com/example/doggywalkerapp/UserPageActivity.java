@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +26,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class UserPageActivity extends DrawerBaseActivity {
@@ -102,9 +107,17 @@ public class UserPageActivity extends DrawerBaseActivity {
         recyclerView.setAdapter(tripClassAdapter);
 
 
-        //Get data from database to list
+        //check and update the future list of trips
+        checkFutureTripsFromDB();
+
+
+
+    }
+
+    //Get data from database to list
+    private void getFutureTripsList(){
         futureTripDbRef.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
+            @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -126,10 +139,7 @@ public class UserPageActivity extends DrawerBaseActivity {
 
             }
         });
-
-
     }
-
 
     private UserClass getCurrentUser() {
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
@@ -137,6 +147,95 @@ public class UserPageActivity extends DrawerBaseActivity {
         String json = sharedPreferences.getString("User", "");
         UserClass user = gson.fromJson(json, UserClass.class);
         return user;
+
+    }
+
+
+    @SuppressLint("SimpleDateFormat")
+    private void checkFutureTripsFromDB() {
+
+        Log.d("isFutureListCheckedToday()", Boolean.toString(isFutureListCheckedToday()));
+
+        if (!isFutureListCheckedToday()) {
+            updateFutureTrips();
+            //save current date
+            saveDateToSharedPrefences(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+        }
+
+        //after updating the future list of trips i show the updated future trips.
+        getFutureTripsList();
+
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private boolean isFutureListCheckedToday() {
+        sharedPreferences = getSharedPreferences("Checked", MODE_PRIVATE);
+        String date = sharedPreferences.getString("Checked", "");
+        //check if the registered date is equals to the current date
+        return date.equals(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+    }
+
+    private void updateFutureTrips() {
+        UserClass currentUser = getCurrentUser();
+        String userUid = currentUser.getUid();
+        DatabaseReference futureList = FirebaseDatabase.getInstance().getReference("Users/" + userUid + "/FutureTrips");
+        ArrayList<TripClass> pastTrips = new ArrayList<>();
+        futureList.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    TripClass tripClass = dataSnapshot.getValue(TripClass.class);
+                    assert tripClass != null;
+                    if (isDatePassed(tripClass.getTripOccurDate())) {
+                        pastTrips.add(tripClass);
+                        dataSnapshot.getRef().removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Log.d("RemovePassedTrip", "Complete");
+                            }
+                        });
+                    }
+                }
+                Log.d("pastTrips", pastTrips.toString());
+                writePastListToDB(pastTrips);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void saveDateToSharedPrefences(String date) {
+        SharedPreferences sharedPreferences = getSharedPreferences("Checked", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Checked", date);
+        editor.apply();
+    }
+
+    private boolean isDatePassed(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate date = LocalDate.parse(dateString, formatter);
+
+        // Get the current date
+        LocalDate currentDate = LocalDate.now();
+
+        // Compare the input date with the current date
+        return date.isBefore(currentDate);
+    }
+
+    private void writePastListToDB(ArrayList<TripClass> pastTrips) {
+        UserClass currentUser = getCurrentUser();
+        String userUid = currentUser.getUid();
+        DatabaseReference pastTripsRf = FirebaseDatabase.getInstance().getReference("Users/" + userUid + "/PastTrips");
+
+        for (TripClass trip : pastTrips) {
+            String key = trip.getTripId();
+            pastTripsRf.child(key).setValue(trip);
+        }
+
 
     }
 

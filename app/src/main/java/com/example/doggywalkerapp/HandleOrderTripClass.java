@@ -26,8 +26,6 @@ public class HandleOrderTripClass {
 
     //first build a trip
     public HandleOrderTripClass() {
-
-
     }
 
     //if the function returns false the page will be needed to be refreshed and in this way everything will start from the start
@@ -70,45 +68,7 @@ public class HandleOrderTripClass {
 
             }
         };
-
-//        pathOfPickedDay.addValueEventListener(new ValueEventListener() {
-//            @SuppressLint("NotifyDataSetChanged")
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                    DogWalkerClass dogWalker = dataSnapshot.getValue(DogWalkerClass.class);
-//                    dogWalkersList.add(dogWalker);
-//                }
-//                onDataChangeFinished = true;
-//                IsDogWalkerExist(pickedWalker, dogWalkersList);
-//                Log.d("sagivgugu", dogWalkersList.toString());
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                onDataChangeFinished = true;
-//            }
-//        });
-
         pathOfPickedDay.addListenerForSingleValueEvent(eventListener);
-//        while (!onDataChangeFinished.get()) {
-//            Log.d("in the while","while");
-//        }
-
-//        if (!dogWalkersList.isEmpty() && !IsDogWalkerExist(pickedWalker, dogWalkersList)) {
-//            Log.d("Here in the if", "yes");
-//            //The dog walker is not exist and the page is needed to be refreshed
-//            return false;
-//        } else {
-//            Log.d("in the else", Boolean.toString(dogWalkersList.isEmpty()) + Boolean.toString(IsDogWalkerExist(pickedWalker, dogWalkersList)));
-//
-//        }
-//
-//        saveTripToDB();
-//        deleteDogWalkerFromThePickedDay();
-//        return true;
-
     }
 
     //function for checking if the picked dog walker exists in the updated list

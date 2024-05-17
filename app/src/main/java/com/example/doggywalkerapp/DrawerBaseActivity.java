@@ -64,6 +64,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
         }
         else{
             clearDataFromSharedPreferences("User");
+            clearDataFromSharedPreferences("Checked");
+
             firebaseAuth.signOut();
             startActivity(new Intent(this, WelcomeActivity.class));
             overridePendingTransition(0, 0);
