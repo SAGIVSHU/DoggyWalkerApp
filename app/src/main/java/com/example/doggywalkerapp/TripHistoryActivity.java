@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +32,7 @@ import java.util.Objects;
 
 public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerViewInterface {
     private ActivityTripHistoryBinding activityTripHistoryBinding; //for menu
+    private boolean isRated;
 
     private RecyclerView recyclerView; // recycle view
     private DatabaseReference pastTripsDbRef;//firebase reference
@@ -47,6 +50,9 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
         activityTripHistoryBinding = ActivityTripHistoryBinding.inflate(getLayoutInflater());
         setContentView(activityTripHistoryBinding.getRoot());
         allocateActivityTitle("Trip History");
+
+
+        isRated = false; //The trip has not been rated
 
         //create dialog
         //set dialog
@@ -104,6 +110,8 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
                 updateDogWalker("DogWalkers");
                 dialog.dismiss();
                 deletePickedWalkerFromDb();
+                showToast(tripClass.getDogWalkerName() + " was rated");
+                isRated = true;
                 startActivity(new Intent(TripHistoryActivity.this, UserPageActivity.class));
 
 
@@ -123,7 +131,10 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
     @Override
     public void onItemClick(int position) {
         tripClass = pastTripsList.get(position);
-        dialog.show();
+        if(!isRated){
+            //show the rating dialog only if the user hasn't rated yet
+            dialog.show();
+        }
     }
 
     private UserClass getCurrentUser() {
@@ -153,7 +164,7 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
 
                 ///bug here!!!!!!
 
-                DogWalkerClass dogWalker = new DogWalkerClass(tripClass.getDogWalkerName(),tripClass.getDogWalkerPhoneNumber(),tripClass.getDogWalkerRating(),tripClass.getDogWalkerLocation(),tripClass.getWalkerId(),tripClass.getWalkerSumRatedTrips());
+                DogWalkerClass dogWalker = new DogWalkerClass(tripClass.getDogWalkerName(), tripClass.getDogWalkerPhoneNumber(), tripClass.getDogWalkerRating(), tripClass.getDogWalkerLocation(), tripClass.getWalkerId(), tripClass.getWalkerSumRatedTrips());
                 Log.d("22222222222", Boolean.toString(tripClass instanceof DogWalkerClass));
                 Log.d("ani333", dogWalker.toString());
 
@@ -167,6 +178,17 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users/" + getCurrentUser().getUid() + "/PastTrips/" + tripClass.getTripId());
         databaseReference.removeValue();
 
+    }
+
+    private void showToast(String text) {
+        LayoutInflater inflater = getLayoutInflater();
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) View my_toast = inflater.inflate(R.layout.my_toast, findViewById(R.id.my_toast));
+        TextView tv = my_toast.findViewById(R.id.tv_my_toast);
+        tv.setText(text);
+        Toast toast = new Toast(TripHistoryActivity.this);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(my_toast);
+        toast.show();
     }
 
 
