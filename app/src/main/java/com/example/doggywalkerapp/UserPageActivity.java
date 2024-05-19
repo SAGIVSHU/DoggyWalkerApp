@@ -110,6 +110,10 @@ public class UserPageActivity extends DrawerBaseActivity {
         //check and update the future list of trips
         checkFutureTripsFromDB();
 
+        //after updating the future list of trips i show the updated future trips.
+        //Note: if the future trips hasn't checked today, it is being checked and then refresh the activity for showing the newest future trips.
+        getFutureTripsList();
+
 
 
     }
@@ -158,11 +162,13 @@ public class UserPageActivity extends DrawerBaseActivity {
 
         if (!isFutureListCheckedToday()) {
             updateFutureTrips();
-            //save current date
+            //save current date to be noted that is checked
             saveDateToSharedPrefences(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+            //if the future trips not checked them it refresh the activity at the end in order to get the most updated future trips list!
+            finish();
+            startActivity(getIntent());
         }
-        //after updating the future list of trips i show the updated future trips.
-        getFutureTripsList();
+
 
 
 
