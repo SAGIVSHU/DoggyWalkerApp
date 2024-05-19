@@ -120,7 +120,7 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
         mainTextDialog = (TextView) dialog.findViewById(R.id.mainTxt);
 
 
-        //build the dialog
+        //build the alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(DogWalkersPerDayActivity.this);
         builder.setCancelable(false);
 
@@ -145,7 +145,6 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
                         progressDialog.show();
                         //create the class that handle couples of orders at the same time
                         HandleOrderTripClass handleOrderTripClass = new HandleOrderTripClass();
-
 
                         handleOrderTripClass.bookTrip("DogWalkersFolder/" + pickedDay, pickedWalker, pickedDay, personWhoOrdered.getUid()
                                 , new BookingCallback() {

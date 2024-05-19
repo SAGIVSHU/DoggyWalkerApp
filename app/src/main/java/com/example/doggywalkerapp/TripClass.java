@@ -27,6 +27,7 @@ public class TripClass extends DogWalkerClass implements Serializable {
 
     }
 
+
     public String getTripOccurDay() {
         return tripOccurDay;
     }

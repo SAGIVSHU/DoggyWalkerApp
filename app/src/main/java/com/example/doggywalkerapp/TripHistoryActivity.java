@@ -1,16 +1,23 @@
 package com.example.doggywalkerapp;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-
-import com.example.doggywalkerapp.databinding.ActivityOrderTripBinding;
 import com.example.doggywalkerapp.databinding.ActivityTripHistoryBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerViewInterface {
     private ActivityTripHistoryBinding activityTripHistoryBinding; //for menu
@@ -27,6 +35,11 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
     private DatabaseReference pastTripsDbRef;//firebase reference
     private TripClassAdapter tripClassAdapter; // trip class adapter for recycle view
     private ArrayList<TripClass> pastTripsList; // list of all past trips
+    private Dialog dialog; //dialog for rating
+    private TextView yesDialog, noDialog; //text of the rating dialog
+    private RatingBar ratingBar;
+    private TripClass tripClass;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +47,17 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
         activityTripHistoryBinding = ActivityTripHistoryBinding.inflate(getLayoutInflater());
         setContentView(activityTripHistoryBinding.getRoot());
         allocateActivityTitle("Trip History");
+
+        //create dialog
+        //set dialog
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.custom_rating_bar_dialog);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+
+        yesDialog = (TextView) dialog.findViewById(R.id.yesTxt);
+        noDialog = (TextView) dialog.findViewById(R.id.noTxt);
+        ratingBar = dialog.findViewById(R.id.ratingBar);
 
 
         //database reference for future trips
@@ -67,6 +91,39 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
         });
 
 
+        yesDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float rating = ratingBar.getRating();
+                changeRating(rating);
+                String[] weekDays = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+                for (String weekDay : weekDays) {
+                    //In case where the dog walker isn't found on the current day because someone had ordered him, he will no be update with no raising error
+                    updateDogWalker(weekDay);
+                }
+                updateDogWalker("DogWalkers");
+                dialog.dismiss();
+                deletePickedWalkerFromDb();
+                startActivity(new Intent(TripHistoryActivity.this, UserPageActivity.class));
+
+
+            }
+        });
+
+        noDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        tripClass = pastTripsList.get(position);
+        dialog.show();
     }
 
     private UserClass getCurrentUser() {
@@ -78,8 +135,39 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
 
     }
 
-    @Override
-    public void onItemClick(int position) {
+    public void changeRating(float ratingForChange) {
+
+        float newAvgSum = Float.parseFloat(tripClass.getDogWalkerRating()) * Integer.parseInt(tripClass.getWalkerSumRatedTrips()) + ratingForChange;
+        tripClass.setWalkerSumRatedTrips(Integer.toString(Integer.parseInt(tripClass.getWalkerSumRatedTrips()) + 1));
+        float currentRating = newAvgSum / Float.parseFloat(tripClass.getWalkerSumRatedTrips());
+        @SuppressLint("DefaultLocale") String trimmedNumber = String.format("%.1f", currentRating);
+        tripClass.setDogWalkerRating(trimmedNumber);
+    }
+
+    public void updateDogWalker(String path) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + path + tripClass.getWalkerId());
+        databaseReference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + path);
+
+                ///bug here!!!!!!
+
+                DogWalkerClass dogWalker = new DogWalkerClass(tripClass.getDogWalkerName(),tripClass.getDogWalkerPhoneNumber(),tripClass.getDogWalkerRating(),tripClass.getDogWalkerLocation(),tripClass.getWalkerId(),tripClass.getWalkerSumRatedTrips());
+                Log.d("22222222222", Boolean.toString(tripClass instanceof DogWalkerClass));
+                Log.d("ani333", dogWalker.toString());
+
+                databaseReference2.child(dogWalker.getWalkerId()).setValue(dogWalker);
+            }
+        });
 
     }
+
+    private void deletePickedWalkerFromDb() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users/" + getCurrentUser().getUid() + "/PastTrips/" + tripClass.getTripId());
+        databaseReference.removeValue();
+
+    }
+
+
 }

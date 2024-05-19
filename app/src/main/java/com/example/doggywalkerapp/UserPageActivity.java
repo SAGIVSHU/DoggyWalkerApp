@@ -116,7 +116,7 @@ public class UserPageActivity extends DrawerBaseActivity {
 
     //Get data from database to list
     private void getFutureTripsList(){
-        futureTripDbRef.addValueEventListener(new ValueEventListener() {
+        futureTripDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -161,9 +161,11 @@ public class UserPageActivity extends DrawerBaseActivity {
             //save current date
             saveDateToSharedPrefences(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
         }
-
         //after updating the future list of trips i show the updated future trips.
         getFutureTripsList();
+
+
+
 
     }
 
@@ -196,6 +198,7 @@ public class UserPageActivity extends DrawerBaseActivity {
                         });
                     }
                 }
+
                 Log.d("pastTrips", pastTrips.toString());
                 writePastListToDB(pastTrips);
 
