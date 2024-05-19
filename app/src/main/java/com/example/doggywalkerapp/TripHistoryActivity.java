@@ -79,6 +79,8 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
         tripClassAdapter = new TripClassAdapter(this, pastTripsList, this);
         recyclerView.setAdapter(tripClassAdapter);
 
+
+        //retrieve the past trips list from firebase
         pastTripsDbRef.addValueEventListener(new ValueEventListener() {
             @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
@@ -131,7 +133,7 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
     @Override
     public void onItemClick(int position) {
         tripClass = pastTripsList.get(position);
-        if(!isRated){
+        if (!isRated) {
             //show the rating dialog only if the user hasn't rated yet
             dialog.show();
         }
@@ -163,7 +165,9 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
                 DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + path);
 
                 ///bug here!!!!!!
+                //down casting doesn't work....
 
+                //bug here
                 DogWalkerClass dogWalker = new DogWalkerClass(tripClass.getDogWalkerName(), tripClass.getDogWalkerPhoneNumber(), tripClass.getDogWalkerRating(), tripClass.getDogWalkerLocation(), tripClass.getWalkerId(), tripClass.getWalkerSumRatedTrips());
                 Log.d("22222222222", Boolean.toString(tripClass instanceof DogWalkerClass));
                 Log.d("ani333", dogWalker.toString());

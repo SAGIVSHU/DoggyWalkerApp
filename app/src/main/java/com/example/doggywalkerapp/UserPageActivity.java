@@ -108,42 +108,13 @@ public class UserPageActivity extends DrawerBaseActivity {
 
 
         //check and update the future list of trips
-        checkFutureTripsFromDB();
+        updateFutureTrips();
 
         //after updating the future list of trips i show the updated future trips.
         //Note: if the future trips hasn't checked today, it is being checked and then refresh the activity for showing the newest future trips.
-        getFutureTripsList();
-
-
-
     }
 
-    //Get data from database to list
-    private void getFutureTripsList(){
-        futureTripDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    TripClass tripClass = dataSnapshot.getValue(TripClass.class);
-                    futureTripsList.add(tripClass);
-                }
-                tripClassAdapter.notifyDataSetChanged();
 
-                //if there is no future trips
-                if (futureTripsList.size() == 0) {
-                    messageTxt.setText("No Trips For This Week");
-                } else {
-                    messageTxt.setText("Trips Of This Week");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
     private UserClass getCurrentUser() {
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
@@ -155,33 +126,9 @@ public class UserPageActivity extends DrawerBaseActivity {
     }
 
 
-    @SuppressLint("SimpleDateFormat")
-    private void checkFutureTripsFromDB() {
-
-        Log.d("isFutureListCheckedToday()", Boolean.toString(isFutureListCheckedToday()));
-
-        if (!isFutureListCheckedToday()) {
-            updateFutureTrips();
-            //save current date to be noted that is checked
-            saveDateToSharedPrefences(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-            //if the future trips not checked them it refresh the activity at the end in order to get the most updated future trips list!
-            finish();
-            startActivity(getIntent());
-        }
 
 
 
-
-
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private boolean isFutureListCheckedToday() {
-        sharedPreferences = getSharedPreferences("Checked", MODE_PRIVATE);
-        String date = sharedPreferences.getString("Checked", "");
-        //check if the registered date is equals to the current date
-        return date.equals(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-    }
 
     private void updateFutureTrips() {
         UserClass currentUser = getCurrentUser();
@@ -189,6 +136,7 @@ public class UserPageActivity extends DrawerBaseActivity {
         DatabaseReference futureList = FirebaseDatabase.getInstance().getReference("Users/" + userUid + "/FutureTrips");
         ArrayList<TripClass> pastTrips = new ArrayList<>();
         futureList.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -196,17 +144,27 @@ public class UserPageActivity extends DrawerBaseActivity {
                     assert tripClass != null;
                     if (isDatePassed(tripClass.getTripOccurDate())) {
                         pastTrips.add(tripClass);
+
                         dataSnapshot.getRef().removeValue(new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                 Log.d("RemovePassedTrip", "Complete");
                             }
                         });
+                    } else {
+                        futureTripsList.add(tripClass);
                     }
                 }
-
+                tripClassAdapter.notifyDataSetChanged();
+                //if there is no future trips
+                if (futureTripsList.size() == 0) {
+                    messageTxt.setText("No Trips For This Week");
+                } else {
+                    messageTxt.setText("Trips Of This Week");
+                }
                 Log.d("pastTrips", pastTrips.toString());
                 writePastListToDB(pastTrips);
+
 
             }
 
@@ -217,12 +175,7 @@ public class UserPageActivity extends DrawerBaseActivity {
         });
     }
 
-    public void saveDateToSharedPrefences(String date) {
-        SharedPreferences sharedPreferences = getSharedPreferences("Checked", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("Checked", date);
-        editor.apply();
-    }
+
 
     private boolean isDatePassed(String dateString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
