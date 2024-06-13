@@ -29,6 +29,7 @@ public class HandleOrderTripClass {
     }
 
     //if the function returns false the page will be needed to be refreshed and in this way everything will start from the start
+    // an interface of book a trip that has on success and on failure
     public void bookTrip(String pathOfPickedDayForValidation, DogWalkerClass pickedWalker, String tripOccurDay, String personWhoOrderedUid, BookingCallback callback) {
 
         this.pickedWalker = pickedWalker;

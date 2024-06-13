@@ -1,5 +1,7 @@
 package com.example.doggywalkerapp;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -77,6 +79,7 @@ public class DogWalkerClass implements Serializable {
         this.walkerSumRatedTrips = walkerSumRatedTrips;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "DogWalkerClass{" +

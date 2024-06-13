@@ -103,12 +103,17 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
             @Override
             public void onClick(View v) {
                 float rating = ratingBar.getRating();
+                //change the rating for the dog walker
                 changeRating(rating);
+
                 String[] weekDays = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+                //update the  dog walker list at DogWalkersFolder/$weekDay
                 for (String weekDay : weekDays) {
                     //In case where the dog walker isn't found on the current day because someone had ordered him, he will no be update with no raising error
                     updateDogWalker(weekDay);
                 }
+                //update the main dog walker list at DogWalkersFolder/DogWalkers
                 updateDogWalker("DogWalkers");
                 dialog.dismiss();
                 deletePickedWalkerFromDb();
@@ -167,7 +172,7 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
                 ///bug here!!!!!!
                 //down casting doesn't work....
 
-                //bug here
+                //bug here (now there is no bug)
                 DogWalkerClass dogWalker = new DogWalkerClass(tripClass.getDogWalkerName(), tripClass.getDogWalkerPhoneNumber(), tripClass.getDogWalkerRating(), tripClass.getDogWalkerLocation(), tripClass.getWalkerId(), tripClass.getWalkerSumRatedTrips());
                 Log.d("22222222222", Boolean.toString(tripClass instanceof DogWalkerClass));
                 Log.d("ani333", dogWalker.toString());

@@ -107,7 +107,10 @@ public class LoginActivity extends AppCompatActivity {
                         showToast("Admin is here!!!!!!!");
                         startActivity(new Intent(LoginActivity.this, AdminActivity.class));
                         finish();
-                    } else {
+                    }
+
+                    //bug here
+                    else {
                         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
                         String json = sharedPreferences.getString("User", "");
                         userRef = FirebaseDatabase.getInstance().getReference("Users");
@@ -117,9 +120,9 @@ public class LoginActivity extends AppCompatActivity {
 
                                 //search for the user with the fire auth id
                                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                    String currentUid = Objects.requireNonNull(postSnapshot.getValue(UserClass.class)).getUid();
+                                    UserClass user = postSnapshot.getValue(UserClass.class);
+                                    String currentUid = user.getUid();
                                     if (currentUid.equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
-                                        UserClass user = postSnapshot.getValue(UserClass.class);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         Gson gson = new Gson();
                                         String json = gson.toJson(user);
