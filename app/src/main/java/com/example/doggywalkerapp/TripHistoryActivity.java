@@ -49,7 +49,7 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
         super.onCreate(savedInstanceState);
         activityTripHistoryBinding = ActivityTripHistoryBinding.inflate(getLayoutInflater());
         setContentView(activityTripHistoryBinding.getRoot());
-        allocateActivityTitle("Trip History");
+        allocateActivityTitle("Rate Your Trips");
 
 
         isRated = false; //The trip has not been rated

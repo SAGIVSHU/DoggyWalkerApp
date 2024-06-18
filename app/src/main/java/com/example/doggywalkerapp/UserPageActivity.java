@@ -30,6 +30,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -189,22 +190,28 @@ public class UserPageActivity extends DrawerBaseActivity {
 
 
     //function that returns if the date has passed
-    public static boolean hasDatePassed(String dateString) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-        dateFormat.setLenient(false);
-
+    public static boolean hasDatePassed(String dateStr) {
+        // Split the date string into day, month, and year
         try {
-            Date date = dateFormat.parse(dateString);
-            Date currentDate = new Date();
+            String[] parts = dateStr.split("/");
+            int day = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            int year = Integer.parseInt(parts[2]);
 
-            assert date != null;
-            return date.before(currentDate);
-        } catch (ParseException e) {
-            // Handle invalid date format
-            System.out.println("Invalid date format: " + dateString);
+            // Create a LocalDate object from the extracted components
+            LocalDate date = LocalDate.of(year, month, day);
+
+            // Get today's date
+            LocalDate today = LocalDate.now();
+
+            // Check if the date has passed
+            return date.isBefore(today);
+        } catch (NumberFormatException | DateTimeParseException e) {
+            // Invalid date format or invalid date, return false
             return false;
         }
     }
+
     private void writePastListToDB(ArrayList<TripClass> pastTrips) {
         UserClass currentUser = getCurrentUser();
         String userUid = currentUser.getUid();
