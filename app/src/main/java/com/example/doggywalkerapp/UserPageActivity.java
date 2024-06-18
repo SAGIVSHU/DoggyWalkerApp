@@ -26,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -133,18 +134,26 @@ public class UserPageActivity extends DrawerBaseActivity {
     private void updateFutureTrips() {
         UserClass currentUser = getCurrentUser();
         String userUid = currentUser.getUid();
+        Log.d("uidcurrent",userUid);
+        //reference for futureTrips
         DatabaseReference futureList = FirebaseDatabase.getInstance().getReference("Users/" + userUid + "/FutureTrips");
         ArrayList<TripClass> pastTrips = new ArrayList<>();
+
         futureList.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("heygugu","herererererer");
+
+                Log.d("heyg456ugu","herererererer");
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     TripClass tripClass = dataSnapshot.getValue(TripClass.class);
-                    assert tripClass != null;
-                    if (isDatePassed(tripClass.getTripOccurDate())) {
-                        pastTrips.add(tripClass);
+                    Log.d("tripTrip345",tripClass.toString());
 
+
+                    if (hasDatePassed(tripClass.getTripOccurDate())) {
+                        pastTrips.add(tripClass);
                         dataSnapshot.getRef().removeValue(new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
@@ -156,6 +165,9 @@ public class UserPageActivity extends DrawerBaseActivity {
                     }
                 }
                 tripClassAdapter.notifyDataSetChanged();
+                Log.d("FutureTrips",futureTripsList.toString());
+                Log.d("PastTrips",pastTrips.toString());
+
                 //if there is no future trips
                 if (futureTripsList.size() == 0) {
                     messageTxt.setText("No Trips For This Week");
@@ -164,7 +176,6 @@ public class UserPageActivity extends DrawerBaseActivity {
                 }
                 Log.d("pastTrips", pastTrips.toString());
                 writePastListToDB(pastTrips);
-
 
             }
 
@@ -177,17 +188,23 @@ public class UserPageActivity extends DrawerBaseActivity {
 
 
 
-    private boolean isDatePassed(String dateString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate date = LocalDate.parse(dateString, formatter);
+    //function that returns if the date has passed
+    public static boolean hasDatePassed(String dateString) {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+        dateFormat.setLenient(false);
 
-        // Get the current date
-        LocalDate currentDate = LocalDate.now();
+        try {
+            Date date = dateFormat.parse(dateString);
+            Date currentDate = new Date();
 
-        // Compare the input date with the current date
-        return date.isBefore(currentDate);
+            assert date != null;
+            return date.before(currentDate);
+        } catch (ParseException e) {
+            // Handle invalid date format
+            System.out.println("Invalid date format: " + dateString);
+            return false;
+        }
     }
-
     private void writePastListToDB(ArrayList<TripClass> pastTrips) {
         UserClass currentUser = getCurrentUser();
         String userUid = currentUser.getUid();

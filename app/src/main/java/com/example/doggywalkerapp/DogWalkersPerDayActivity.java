@@ -163,17 +163,7 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
                                     }
                                 });
 
-//                        if (handleOrderTripClass.bookTrip("DogWalkersFolder/" + pickedDay,pickedWalker, pickedDay, personWhoOrdered.getUid())) {
-//                            showToast(pickedWalker.getDogWalkerName() + " was ordered for " + pickedDay);
-//                            startActivity(new Intent(DogWalkersPerDayActivity.this, UserPageActivity.class)); // finally new intent
-//
-//                        } else {
-//                            alertDialog.setMessage(pickedWalker.getDogWalkerName() + " is taken");
-//                            alertDialog.show();
-//                            //refresh the activity
-//                            Log.d("RefreshSagiv", "Gugu");
-//
-//                        }
+
                         dialog.dismiss();
 
                     } else {
