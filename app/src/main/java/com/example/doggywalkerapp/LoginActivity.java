@@ -39,8 +39,12 @@ public class LoginActivity extends AppCompatActivity {
     private DatabaseReference userRef;
     private SharedPreferences sharedPreferences;
     private Button loginBt;
+    private TextView rgBt;
+    private EditText emailEt;
+    private EditText passEt;
+    private TextView invalidTextLogin;
 
-    final Runnable r = new Runnable() {
+    private Runnable run = new Runnable() {
         public void run() {
             Intent go = new Intent(LoginActivity.this, UserPageActivity.class);
             startActivity(go);
@@ -56,12 +60,12 @@ public class LoginActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
 
-        firebaseAuth = firebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         loginBt = (Button) findViewById(R.id.loginBt);
-        final TextView rgBt = (TextView) findViewById(R.id.registerTextBt);
-        final EditText emailEt = (EditText) findViewById(R.id.emailEt);
-        final EditText passEt = (EditText) findViewById(R.id.passwordEt);
-        final TextView invalidTextLogin = (TextView) findViewById(R.id.invalidEmailTextLogin);
+        rgBt = (TextView) findViewById(R.id.registerTextBt);
+        emailEt = (EditText) findViewById(R.id.emailEt);
+        passEt = (EditText) findViewById(R.id.passwordEt);
+        invalidTextLogin = (TextView) findViewById(R.id.invalidEmailTextLogin);
 
         loginBt.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
@@ -109,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                     }
 
-                    //bug here
                     else {
                         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
                         String json = sharedPreferences.getString("User", "");
@@ -129,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                                         editor.putString("User", json);
                                         editor.apply();
                                         final Handler handler = new Handler();
-                                        handler.postDelayed(r, 500);
+                                        handler.postDelayed(run, 500);
                                     }
 
                                 }

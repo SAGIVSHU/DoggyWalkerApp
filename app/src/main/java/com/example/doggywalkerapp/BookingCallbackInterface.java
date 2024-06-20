@@ -1,6 +1,6 @@
 package com.example.doggywalkerapp;
 
-public interface BookingCallback {
+public interface BookingCallbackInterface {
     void onBookingSuccess();
     void onBookingFailure();
 }

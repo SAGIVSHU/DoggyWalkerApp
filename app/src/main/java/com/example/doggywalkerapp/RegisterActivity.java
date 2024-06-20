@@ -68,15 +68,24 @@ public class RegisterActivity extends AppCompatActivity {
     private final static String TAG = "MAIN";
 
     private final static int MY_CAMERA_PERMISSION_CODE = 100;
-    private static final String[] PERMISSIONS = new String[]{
-            android.Manifest.permission.CAMERA
-    };
+    private static final String[] PERMISSIONS = new String[]{android.Manifest.permission.CAMERA};
     private Uri imageUri;
     private Button registerBt;
     private UserClass user;
-    private TextView closeTxt;
+    private TextView closeTxt, loginText, clear;
     private ImageButton cameraButton, galleryButton;
     private Dialog dialog;
+    private ImageView uploadImage;
+    private EditText passEt, phoneEt, userEt, raceEt, locationEt, emailEt;
+    final Runnable run = new Runnable() {
+        public void run() {
+            Intent go = new Intent(RegisterActivity.this, UserPageActivity.class);
+            startActivity(go);
+            finish();
+
+        }
+    };
+
 
     @Override
     protected void onDestroy() {
@@ -97,18 +106,18 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("Uploads");
 
-        final EditText passEt = (EditText) findViewById(R.id.userPassword);
-        final EditText phoneEt = (EditText) findViewById(R.id.phoneNumber);
-        final EditText userEt = (EditText) findViewById(R.id.userName);
-        final EditText raceEt = (EditText) findViewById(R.id.dogRace);
-        final EditText locationEt = (EditText) findViewById(R.id.location);
-        final EditText emailEt = (EditText) findViewById(R.id.userEmail);
+        passEt = (EditText) findViewById(R.id.userPassword);
+        phoneEt = (EditText) findViewById(R.id.phoneNumber);
+        userEt = (EditText) findViewById(R.id.userName);
+        raceEt = (EditText) findViewById(R.id.dogRace);
+        locationEt = (EditText) findViewById(R.id.location);
+        emailEt = (EditText) findViewById(R.id.userEmail);
 
 
         registerBt = (Button) findViewById(R.id.registerBt);
-        final TextView clear = (TextView) findViewById(R.id.clearRemarks);
-        final TextView loginText = (TextView) findViewById(R.id.loginTextBt);
-        final ImageView uploadImage = (ImageView) findViewById(R.id.userIcon);
+        clear = (TextView) findViewById(R.id.clearRemarks);
+        loginText = (TextView) findViewById(R.id.loginTextBt);
+        uploadImage = (ImageView) findViewById(R.id.userIcon);
 
 
         clear.setOnTouchListener(new View.OnTouchListener() {
@@ -204,33 +213,29 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        startCamera = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == RESULT_OK) {
-                            // There are no request codes
-                            Log.e(TAG, imageUri.toString());
-                            uploadImage.setImageURI(imageUri);
-                        }
-                    }
+        startCamera = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK) {
+                    // There are no request codes
+                    Log.e(TAG, imageUri.toString());
+                    uploadImage.setImageURI(imageUri);
                 }
-        );
+            }
+        });
 
 
         registerBt.setOnClickListener(new View.OnClickListener() {
             @Override
             @SuppressLint("ResourceAsColor")
             public void onClick(View v) {
+                //regex for validation
                 final boolean passFlag = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$").matcher(passEt.getText()).matches();
                 final boolean emailFlag = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(emailEt.getText()).matches();
                 final boolean phoneFlag = Pattern.compile("^05\\d{8}$").matcher(phoneEt.getText()).matches();
                 final boolean userFlag = Pattern.compile("^[a-zA-Z]{3,8}$").matcher(userEt.getText()).matches();
 
-                if (passEt != null && passFlag && phoneEt != null && phoneFlag && emailEt != null && emailFlag && locationEt != null
-                        && !locationEt.getText().toString().equals("") && raceEt != null &&
-                        !raceEt.getText().toString().equals("") && userEt != null && userFlag) {
+                if (passEt != null && passFlag && phoneEt != null && phoneFlag && emailEt != null && emailFlag && locationEt != null && !locationEt.getText().toString().equals("") && raceEt != null && !raceEt.getText().toString().equals("") && userEt != null && userFlag) {
                     String userName = userEt.getText().toString();
                     String userPassword = passEt.getText().toString();
                     String phoneNumber = phoneEt.getText().toString();
@@ -238,14 +243,9 @@ public class RegisterActivity extends AppCompatActivity {
                     String finalLocation = locationEt.getText().toString();
                     String userEmail = emailEt.getText().toString();
 
-                    user = new UserClass(userEmail,
-                            userName,
-                            phoneNumber,
-                            race,
-                            finalLocation,
-                            "");
+                    user = new UserClass(userEmail, userName, phoneNumber, race, finalLocation, "");
 
-                    regUser(userEmail,userPassword);
+                    regUser(userEmail, userPassword);
                     Log.d("afterCreate", user.getUid());
                     Log.d("afterCreate2", user.getUid());
 
@@ -363,14 +363,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    final Runnable r = new Runnable() {
-        public void run() {
-            Intent go = new Intent(RegisterActivity.this, UserPageActivity.class);
-            startActivity(go);
-            finish();
 
-        }
-    };
 
     private void uploadFile(String uidForUpload) {
 
@@ -379,17 +372,16 @@ public class RegisterActivity extends AppCompatActivity {
             StorageReference fileReference = storageReference.child(uidForUpload);
             Log.d("uidSagivGugu56: ", uidForUpload);
             uploadStorageTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            showToast("Uploaded image successfully");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            showToast(e.getMessage());
-                        }
-                    });
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    showToast("Uploaded image successfully");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    showToast(e.getMessage());
+                }
+            });
         }
     }
 
@@ -402,8 +394,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_PERMISSION_CODE && grantResults.length > 0) {
             showToast("Camera granted");
@@ -413,7 +404,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public void pickCamera() {
+    private void pickCamera() {
         dialog.dismiss();
         Log.e(TAG, "pick Camera");
         ContentValues values = new ContentValues();
@@ -428,31 +419,29 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void regUser(String email, String password) {
-        firebaseAuth.createUserWithEmailAndPassword(email,password).
-                addOnCompleteListener(this,
-                        new OnCompleteListener<AuthResult>() {
-                            @SuppressLint("SetTextI18n")
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    registerBt.setEnabled(false);
-                                    progressDialog.setMessage("Registration is in progress");
-                                    progressDialog.show();
-                                    String userId = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
-                                    user.setUid(userId);
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    registerBt.setEnabled(false);
+                    progressDialog.setMessage("Registration is in progress");
+                    progressDialog.show();
+                    String userId = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
+                    user.setUid(userId);
 
-                                    Log.d("uidsagivtry", user.getUid());
-                                    uploadFile(userId);
-                                    saveUserDB(user);
+                    Log.d("uidsagivtry", user.getUid());
+                    uploadFile(userId);
+                    saveUserDB(user);
 
 
-                                    final Handler handler = new Handler();
-                                    handler.postDelayed(r, 4000);
-                                } else {
-                                    showToast("Email is already registered");
-                                }
-                            }
-                        });
+                    final Handler handler = new Handler();
+                    handler.postDelayed(run, 4000);
+                } else {
+                    showToast("Email is already registered");
+                }
+            }
+        });
     }
 
     private void saveUserDB(UserClass user) {
@@ -471,8 +460,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void showToast(String text) {
         LayoutInflater inflater = getLayoutInflater();
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-        View my_toast = inflater.inflate(R.layout.my_toast, findViewById(R.id.my_toast));
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) View my_toast = inflater.inflate(R.layout.my_toast, findViewById(R.id.my_toast));
         TextView tv = my_toast.findViewById(R.id.tv_my_toast);
         tv.setText(text);
         Toast toast = new Toast(RegisterActivity.this);
@@ -481,6 +469,8 @@ public class RegisterActivity extends AppCompatActivity {
         toast.show();
     }
 
+
+    //function that reduce the image size
     public static Uri reduceImageSize(Context context, Uri uri) {
         Bitmap bitmap = null;
         try {

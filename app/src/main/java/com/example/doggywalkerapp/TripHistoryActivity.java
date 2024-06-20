@@ -33,7 +33,6 @@ import java.util.Objects;
 public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerViewInterface {
     private ActivityTripHistoryBinding activityTripHistoryBinding; //for menu
     private boolean isRated;
-
     private RecyclerView recyclerView; // recycle view
     private DatabaseReference pastTripsDbRef;//firebase reference
     private TripClassAdapter tripClassAdapter; // trip class adapter for recycle view
@@ -116,7 +115,7 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
                 //update the main dog walker list at DogWalkersFolder/DogWalkers
                 updateDogWalker("DogWalkers");
                 dialog.dismiss();
-                deletePickedWalkerFromDb();
+                deletePickedTripFromDb();
                 showToast(tripClass.getDogWalkerName() + " was rated");
                 isRated = true;
                 startActivity(new Intent(TripHistoryActivity.this, UserPageActivity.class));
@@ -153,7 +152,7 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
 
     }
 
-    public void changeRating(float ratingForChange) {
+    private void changeRating(float ratingForChange) {
 
         float newAvgSum = Float.parseFloat(tripClass.getDogWalkerRating()) * Integer.parseInt(tripClass.getWalkerSumRatedTrips()) + ratingForChange;
         tripClass.setWalkerSumRatedTrips(Integer.toString(Integer.parseInt(tripClass.getWalkerSumRatedTrips()) + 1));
@@ -162,7 +161,7 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
         tripClass.setDogWalkerRating(trimmedNumber);
     }
 
-    public void updateDogWalker(String path) {
+    private void updateDogWalker(String path) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + path + tripClass.getWalkerId());
         databaseReference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -183,7 +182,7 @@ public class TripHistoryActivity extends DrawerBaseActivity implements RecyclerV
 
     }
 
-    private void deletePickedWalkerFromDb() {
+    private void deletePickedTripFromDb() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users/" + getCurrentUser().getUid() + "/PastTrips/" + tripClass.getTripId());
         databaseReference.removeValue();
 

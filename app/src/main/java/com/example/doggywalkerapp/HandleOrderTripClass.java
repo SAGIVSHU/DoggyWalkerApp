@@ -26,11 +26,13 @@ public class HandleOrderTripClass {
 
     //first build a trip
     public HandleOrderTripClass() {
+        //array list for the most updated list
+        this.dogWalkersList = new ArrayList<>();
     }
 
     //if the function returns false the page will be needed to be refreshed and in this way everything will start from the start
     // an interface of book a trip that has on success and on failure
-    public void bookTrip(String pathOfPickedDayForValidation, DogWalkerClass pickedWalker, String tripOccurDay, String personWhoOrderedUid, BookingCallback callback) {
+    public void bookTrip(String pathOfPickedDayForValidation, DogWalkerClass pickedWalker, String tripOccurDay, String personWhoOrderedUid, BookingCallbackInterface callback) {
 
         this.pickedWalker = pickedWalker;
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -39,14 +41,12 @@ public class HandleOrderTripClass {
 
         //create a trip class
         @SuppressLint("SimpleDateFormat") String currentDay = new SimpleDateFormat("EEEE").format(new Date()); //day at the moment
-        orderedTrip = new TripClass(pickedWalker, currentDay, currentDate, tripOccurDay, personWhoOrderedUid);
+        this.orderedTrip = new TripClass(pickedWalker, currentDay, currentDate, tripOccurDay, personWhoOrderedUid);
 
         //reference for checking if the list of the dog walkers has changed
         DatabaseReference pathOfPickedDay = FirebaseDatabase.getInstance().getReference(pathOfPickedDayForValidation);
 
 
-        //array list for the most updated list
-        ArrayList<DogWalkerClass> dogWalkersList = new ArrayList<>();
 
         ValueEventListener eventListener = new ValueEventListener() {
             @Override

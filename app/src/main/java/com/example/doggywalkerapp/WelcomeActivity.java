@@ -9,13 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
 
+    private Button rgButton, lgButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        Button rgButton = (Button) findViewById(R.id.registerBt);
-        Button lgButton = (Button) findViewById(R.id.loginBt);
+         rgButton = (Button) findViewById(R.id.registerBt);
+         lgButton = (Button) findViewById(R.id.loginBt);
 
         rgButton.setOnClickListener(new View.OnClickListener() {
             @Override

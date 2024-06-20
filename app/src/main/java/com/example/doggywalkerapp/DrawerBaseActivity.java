@@ -18,29 +18,32 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class DrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    DrawerLayout drawerLayout;
+    private DrawerLayout drawerLayout;
     private FirebaseAuth firebaseAuth;
-
+    private FrameLayout container;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
+    private ActionBarDrawerToggle toggle;
 
 
     @Override
     public void setContentView(View view) {
         drawerLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_drawer_base, null);
-        FrameLayout container = drawerLayout.findViewById(R.id.activityContainer);
+        container = drawerLayout.findViewById(R.id.activityContainer);
         container.addView(view);
         super.setContentView(drawerLayout);
 
-        Toolbar toolbar = drawerLayout.findViewById(R.id.toolBar);
+        toolbar = drawerLayout.findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
         toolbar.showOverflowMenu();
 
         firebaseAuth = FirebaseAuth.getInstance();
 
 
-        NavigationView navigationView = drawerLayout.findViewById(R.id.nav_view);
+        navigationView = drawerLayout.findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_drawer_open, R.string.menu_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_drawer_open, R.string.menu_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }

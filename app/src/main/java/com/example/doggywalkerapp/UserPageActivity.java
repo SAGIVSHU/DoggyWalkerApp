@@ -45,11 +45,13 @@ public class UserPageActivity extends DrawerBaseActivity {
     private StorageReference storageReference;
     private SharedPreferences sharedPreferences;
     private TextView messageTxt;
+    private ImageView userImg;
+    private TextView personalNameTv, emailTv;
 
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityUserPageBinding = ActivityUserPageBinding.inflate(getLayoutInflater());
         setContentView(activityUserPageBinding.getRoot());
@@ -62,7 +64,7 @@ public class UserPageActivity extends DrawerBaseActivity {
         //message of the future trips
         messageTxt = findViewById(R.id.tripsMessage);
 
-        final ImageView userImg = (ImageView) findViewById(R.id.profileImage);
+        userImg = (ImageView) findViewById(R.id.profileImage);
         userImg.setImageResource(R.drawable.loading_image);
 
 
@@ -86,8 +88,8 @@ public class UserPageActivity extends DrawerBaseActivity {
             }
         });
 
-        final TextView personalNameTv = (TextView) findViewById(R.id.personalNameTv);
-        final TextView emailTv = (TextView) findViewById(R.id.emailTv);
+        personalNameTv = (TextView) findViewById(R.id.personalNameTv);
+        emailTv = (TextView) findViewById(R.id.emailTv);
 
         personalNameTv.setText(currentUser.getUserName());
         emailTv.setText(currentUser.getEmail());
@@ -190,7 +192,7 @@ public class UserPageActivity extends DrawerBaseActivity {
 
 
     //function that returns if the date has passed
-    public static boolean hasDatePassed(String dateStr) {
+    private static boolean hasDatePassed(String dateStr) {
         // Split the date string into day, month, and year
         try {
             String[] parts = dateStr.split("/");

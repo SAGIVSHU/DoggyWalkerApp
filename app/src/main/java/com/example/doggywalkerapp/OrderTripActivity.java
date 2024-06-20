@@ -45,6 +45,7 @@ public class OrderTripActivity extends DrawerBaseActivity {
     private UserClass currentUser;
     private ArrayList<TripClass> userFutureTripsList;
     private DatabaseReference pickedDayDatabaseReference;
+    private AlertDialog alertDialog;
 
 
     @SuppressLint("SimpleDateFormat")
@@ -142,7 +143,7 @@ public class OrderTripActivity extends DrawerBaseActivity {
 
 
                 //Create the dialog
-                AlertDialog alertDialog = builder.create();
+                alertDialog = builder.create();
 
 
                 if (pickedDay.equals("")) {
@@ -169,19 +170,6 @@ public class OrderTripActivity extends DrawerBaseActivity {
                 }
             }
         });
-    }
-
-
-    //function that show my custom toast
-    private void showToast(String text) {
-        LayoutInflater inflater = getLayoutInflater();
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) View my_toast = inflater.inflate(R.layout.my_toast, findViewById(R.id.my_toast));
-        TextView tv = my_toast.findViewById(R.id.tv_my_toast);
-        tv.setText(text);
-        Toast toast = new Toast(OrderTripActivity.this);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(my_toast);
-        toast.show();
     }
 
 

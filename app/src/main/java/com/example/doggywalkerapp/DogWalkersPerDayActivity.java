@@ -1,7 +1,5 @@
 package com.example.doggywalkerapp;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,8 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.doggywalkerapp.databinding.ActivityDogWalkersPerDayBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,24 +42,25 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
     private String pickedDay;
     private UserClass personWhoOrdered;
     private DatabaseReference futureTripDbRef;
-    private TripClass currentTrip;
     private ProgressDialog progressDialog;
+    private AlertDialog alertDialog;
     private boolean isOrdered; // a flag for knowing if the current user already ordered a trip in this activity;
 
     @SuppressLint("SimpleDateFormat")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //get the day from the previous intent
         Intent intent = getIntent();
         pickedDay = intent.getStringExtra("DAY_KEY");
-
 
         //menu part
         activityDogWalkersPerDayBinding = ActivityDogWalkersPerDayBinding.inflate(getLayoutInflater());
         setContentView(activityDogWalkersPerDayBinding.getRoot());
         allocateActivityTitle(pickedDay);
+
+
+
 
         isOrdered = false; // the user didn't order yet 
 
@@ -133,7 +130,7 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
 
 
         //Create the dialog
-        AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         yesDialog.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("UnsafeIntentLaunch")
             @Override
@@ -147,7 +144,7 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
                         HandleOrderTripClass handleOrderTripClass = new HandleOrderTripClass();
 
                         handleOrderTripClass.bookTrip("DogWalkersFolder/" + pickedDay, pickedWalker, pickedDay, personWhoOrdered.getUid()
-                                , new BookingCallback() {
+                                , new BookingCallbackInterface() {
                                     @Override
                                     public void onBookingSuccess() {
                                         showToast(pickedWalker.getDogWalkerName() + " was ordered for " + pickedDay);
@@ -191,30 +188,6 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
         dialog.show();
     }
 
-    //save a trip function
-    private void saveTripToDB() {
-        String tripId = futureTripDbRef.push().getKey();
-        if (currentTrip != null && tripId != null) {
-
-            currentTrip.setTripId(tripId);
-            futureTripDbRef.child(tripId).setValue(currentTrip).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    // set the flag for true and now the user cant order again for that activity
-                    isOrdered = true;
-                    // Data successfully saved
-                    Log.d(TAG, "Trip saved successfully!");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // Handle error
-                    Log.e(TAG, "Error saving trip: " + e.getMessage());
-                }
-            });
-        }
-    }
-
 
     private UserClass getCurrentUser() {
         SharedPreferences sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
@@ -225,21 +198,6 @@ public class DogWalkersPerDayActivity extends DrawerBaseActivity implements Recy
 
     }
 
-    // delete dog walker after ordering function
-    private void deleteDogWalkerById() {
-        if (pickedWalker != null) {
-            String dogWalkerId = pickedWalker.getWalkerId();
-            DatabaseReference deleteDogWalker = FirebaseDatabase.getInstance().getReference("DogWalkersFolder/" + pickedDay + "/" + dogWalkerId);
-            deleteDogWalker.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Log.d("deleted", "yes the dog walker was deleted");
-                }
-            });
-
-
-        }
-    }
 
     //show toast function
     private void showToast(String text) {

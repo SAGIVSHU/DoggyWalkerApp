@@ -2,6 +2,7 @@ package com.example.doggywalkerapp;
 
 import java.io.Serializable;
 
+
 public class UserClass implements Serializable {
     private String userName;
     private String email;

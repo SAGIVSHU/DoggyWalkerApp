@@ -53,15 +53,17 @@ public class AdminActivity extends AppCompatActivity {
     private DogWalkerClass dogWalker;
     private DatabaseReference dbRef;
     private String name, phoneNumber, location, rating, ratedTrips;
+    private Button publish, back;
+    private ImageView uploadImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
-        final Button publish = (Button) findViewById(R.id.publish);
-        final ImageView uploadImage = (ImageView) findViewById(R.id.walkerIcon);
-        final Button back = findViewById(R.id.backBt);
+        publish = (Button) findViewById(R.id.publish);
+        uploadImage = (ImageView) findViewById(R.id.walkerIcon);
+        back = findViewById(R.id.backBt);
 
         storageReference = FirebaseStorage.getInstance().getReference("Uploads");
         imageUri = null;

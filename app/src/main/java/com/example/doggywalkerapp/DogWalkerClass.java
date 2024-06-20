@@ -3,7 +3,6 @@ package com.example.doggywalkerapp;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class DogWalkerClass implements Serializable {
     private String dogWalkerName;
@@ -17,10 +16,8 @@ public class DogWalkerClass implements Serializable {
 
     }
 
-
-    public void DogWalkerClass(){}
-
-    public DogWalkerClass(String dogWalkerName, String dogWalkerPhoneNumber, String dogWalkerRating, String dogWalkerLocation, String walkerId, String walkerSumRatedTrips) {
+    public DogWalkerClass(String dogWalkerName, String dogWalkerPhoneNumber, String dogWalkerRating, String dogWalkerLocation,
+                          String walkerId, String walkerSumRatedTrips) {
         this.dogWalkerName = dogWalkerName;
         this.dogWalkerPhoneNumber = dogWalkerPhoneNumber;
         this.dogWalkerRating = dogWalkerRating;
@@ -68,7 +65,6 @@ public class DogWalkerClass implements Serializable {
     public void setWalkerId(String walkerId) {
         this.walkerId = walkerId;
     }
-
 
 
     public String getWalkerSumRatedTrips() {
